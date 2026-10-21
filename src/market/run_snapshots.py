@@ -24,7 +24,7 @@ from pathlib import Path
 from . import config as C
 from .clv import compute_clv
 from .model_adapter import build_baseline_opinions, build_opinions, from_nba_sim_payload, match_events
-from .odds_api import BudgetExceeded, OddsApiClient, OddsApiError
+from .odds_api import BudgetExceeded, OddsApiClient, OddsApiError, estimate_cost
 from .opinion_log import OpinionLog, OpinionLogError
 from .quotes import parse_odds_payload
 from .scheduler import ET, daily_allowance, events_from_payload, plan_day
@@ -120,29 +120,105 @@ def close_out_opinions(store: MarketStore, log: OpinionLog) -> list[str]:
     return messages
 
 
-def record_opinions(store: MarketStore, log: OpinionLog, projections, day: date) -> list[str]:
+def record_opinions(store: MarketStore, log: OpinionLog, projections, day: date, *,
+                    hold_markets: frozenset[str] = frozenset(), stake: bool = True) -> list[str]:
     """Build and log sides/totals opinions from the day's decision snapshot(s).
 
+    Each projection is priced against the EARLIEST completed decision snapshot taken at or
+    after it was made (as-of rule, NN9). Markets in hold_markets are logged as passes
+    (pass_reason model_hold) so their closes and CLV are still captured. Gate passes are
+    staked at 1/16 Kelly with the per-game and shared-thesis caps (staking.py).
     Re-running is safe: a (game, market, model_version) already logged is skipped.
     """
+    from .odds import american_to_decimal
+    from .staking import cap_groups, round_units, stake_units
+
     messages: list[str] = []
     done = [j for j in store.jobs(status=DONE, date_et=day.isoformat()) if j.kind == "sides_decision"]
     if not done:
         return [f"No completed sides_decision snapshot for {day}; run `run-due` after the decision time"]
-    existing = {(r["game_id"], r["market"], r["model_version"]) for r in log.rows()}
-    matched: set[str] = set()
+    snaps = []
     for job in done:
         quotes = store.load_quotes(job.snapshot_id)
-        ids = match_events(projections, quotes)
-        subset = [p for p in projections if p.model_game_id in ids and p.model_game_id not in matched]
-        matched |= {p.model_game_id for p in subset}
-        opinions, skipped = build_opinions(subset, quotes)
-        messages += [f"skipped {s}" for s in skipped]
-        messages += _log_all(log, opinions, existing)
+        if quotes:
+            snaps.append((max(q.fetched_at for q in quotes), quotes))
+    snaps.sort(key=lambda s: s[0])
+    existing = {(r["game_id"], r["market"], r["model_version"]) for r in log.rows()}
+    pending: list[tuple] = []  # (opinion, projection)
+    unmatched: list[str] = []
     for p in projections:
-        if p.model_game_id not in matched:
-            messages.append(f"skipped {p.model_game_id}: not in any decision snapshot for {day}")
-    return messages
+        chosen = None
+        for snap_time, quotes in snaps:
+            if snap_time < p.as_of:
+                continue
+            if match_events([p], quotes):
+                chosen = quotes
+                break
+        if chosen is None:
+            later = any(t >= p.as_of for t, _ in snaps)
+            why = ("not in any decision snapshot taken after the projection" if later else
+                   f"no decision snapshot at or after the projection ({p.as_of.isoformat()}); "
+                   "take one with `decide`")
+            unmatched.append(f"skipped {p.model_game_id}: {why}")
+            continue
+        opinions, skipped = build_opinions([p], chosen)
+        messages += [f"skipped {s}" for s in skipped]
+        pending += [(op, p) for op in opinions]
+
+    # Gate, hold and stake.
+    raw, groups = [], []
+    for op, p in pending:
+        cls = C.market_class(op.market)
+        w = C.BLEND_W[cls]
+        p_bet = w * op.p_model + (1.0 - w) * op.p_market_novig
+        dec = american_to_decimal(op.price_american)
+        ev = p_bet * dec - 1.0
+        if op.market in hold_markets:
+            op.pass_reason = "model_hold"
+        passes = op.pass_reason is None and ev >= C.EDGE_GATE[cls]
+        raw.append(stake_units(p_bet, dec) if (passes and stake) else 0.0)
+        if op.market in C.SPREAD_LIKE_MARKETS:
+            direction = "home" if op.side == p.home else "away"
+        else:
+            direction = op.side.lower()
+        groups.append((op.model_version, cls, direction))
+    capped = cap_groups(raw, groups, C.SHARED_THESIS_CAP_U)
+    per_game: dict[str, float] = {}
+    for (op, p), s_raw, s_cap, g in zip(pending, raw, capped, groups):
+        s = round_units(min(s_cap, C.PER_GAME_CAP_U - per_game.get(op.game_id, 0.0)))
+        if s_raw > 0:
+            op.stake_u = s
+            per_game[op.game_id] = per_game.get(op.game_id, 0.0) + s
+            op.notes += (f"; stake 1/16 Kelly {s_raw:.2f}u -> {s:.2f}u after shared-thesis cap "
+                         f"{C.SHARED_THESIS_CAP_U}u on {g[1]}/{g[2]}")
+    messages += _log_all(log, [op for op, _ in pending], existing)
+    return messages + unmatched
+
+
+def decide_now(store: MarketStore, client: OddsApiClient, day: date, projections,
+               now: datetime | None = None, cfg: C.FreeTierSchedule = C.FREE_TIER) -> list[str]:
+    """On-demand decision snapshot for a projection made after the scheduled decision time.
+
+    Adds one sides_decision job (spreads + totals, the sides book list) for the events still
+    before tip and runs it at once. Not protected: the budget guard keeps the reserve.
+    """
+    now = now or now_utc()
+    events = {}
+    for job in store.jobs(date_et=day.isoformat()):
+        if job.kind == "sides_close" and job.deadline > now:
+            for eid in job.event_ids:
+                events[eid] = job.deadline  # deadline = tip of the cluster
+    if not events:
+        return [f"No games left before tip on {day}"]
+    from .scheduler import SnapshotJob, PRIORITY, _job_id
+    ids = sorted(events)
+    deadline = min(min(events.values()), now + timedelta(minutes=cfg.decision_window_min))
+    job = SnapshotJob(_job_id("sides_decision", now, ids), day.isoformat(), "sides_decision", now, deadline,
+                      tuple(ids), tuple(cfg.sides_markets), tuple(cfg.sides_books), "featured",
+                      estimate_cost(cfg.sides_markets, cfg.sides_books), PRIORITY["sides_decision"],
+                      "model decision: projection made after the scheduled decision snapshot")
+    store.upsert_jobs([job])
+    return run_due(store, client, now)
 
 
 def _log_all(log: OpinionLog, opinions, existing: set, quiet_dupes: bool = False) -> list[str]:
@@ -240,6 +316,9 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("run-due")
     p_op = sub.add_parser("opinions")
     p_op.add_argument("--payload", type=Path, required=True, help="nba_sim payload_<date>.json")
+    p_op.add_argument("--decide-now", action="store_true",
+                      help="take an on-demand decision snapshot first (projection made after noon)")
+    p_op.add_argument("--hold", default="", help="comma-separated markets logged as model_hold passes")
     sub.add_parser("close-out")
     p_tick = sub.add_parser("tick", help="plan-if-needed + run-due + log + close-out (prints only changes)")
     p_tick.add_argument("--payload-dir", type=Path, default=Path("data/payloads"))
@@ -265,7 +344,11 @@ def main(argv: list[str] | None = None) -> int:
         projections = from_nba_sim_payload(payload)
         log = OpinionLog(args.db, close_plan=close_plan_from(store))
         day = date.fromisoformat(payload["slate_date"])
-        for m in record_opinions(store, log, projections, day):
+        if args.decide_now:
+            for m in decide_now(store, client, day, projections):
+                print(m)
+        holds = frozenset(x.strip() for x in args.hold.split(",") if x.strip())
+        for m in record_opinions(store, log, projections, day, hold_markets=holds):
             print(m)
     elif args.cmd in ("close-out", "export"):
         log = OpinionLog(args.db, close_plan=close_plan_from(store))

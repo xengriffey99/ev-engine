@@ -1,0 +1,635 @@
+{
+ "model_version": "nba-sim 0.2.0 (EPM roster prior, Hollinger pace)",
+ "slate_date": "2026-10-21",
+ "generated_at": "2026-10-21T17:12:11+00:00",
+ "inputs": {
+  "slate": "The Odds API featured odds snapshot 2026-10-21 12:00:01 ET (sides_decision)",
+  "ratings": "Dunks & Threes EPM, 'Expected impact for Wednesday, October 21, 2026 using preceding career data' (https://dunksandthrees.com/epm), 519 players retrieved 2026-10-21T13:05-04:00",
+  "injuries": "Official NBA Injury Report 10/21/26 12:45 PM ET (https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-21_12_45PM.pdf), parsed by automated PDF extraction; all 74 listed players matched to the same team in the D&T roster data",
+  "pace": "ESPN Hollinger Team Statistics, 2025-26 Regular Season (https://www.espn.com/nba/hollinger/teamstats/_/sort/paceFactor/year/2026) retrieved 2026-10-21T12:55-04:00",
+  "estimates": [
+   "P(play) by status: nba_sim priors (probable 0.85, questionable 0.50, doubtful 0.15)",
+   "replacement level EPM -2.0 (nba_sim prior)",
+   "home-court 2.4 pts (APPROX)",
+   "pace is 2025-26 (prior season), regressed 20% to league",
+   "travel/time zones not modeled; four factors, scheme and lineup pace modules neutral"
+  ]
+ },
+ "games": [
+  {
+   "game_id": "2026-10-21-MIL-WAS",
+   "event_id": "164cc0396837d5ff433215ffd3279283",
+   "away": "MIL",
+   "home": "WAS",
+   "tip_et": "2026-10-21T19:00:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 5.94,
+     "total": 228.1,
+     "pace": 99.5,
+     "exp_ortg": {
+      "WAS": 116.3,
+      "MIL": 112.8
+     },
+     "net_rating": {
+      "WAS": -6.24,
+      "MIL": -9.8
+     },
+     "injury_net_per100": {
+      "WAS": -0.855,
+      "MIL": 0.048
+     },
+     "injury_notes": {
+      "WAS": [
+       "AJ Dybantsa (out, P(out)=1.00): -0.47/100",
+       "Jamir Watkins (out, P(out)=1.00): -0.04/100",
+       "W depth: 2.0 expected out -> synergy -0.35/100"
+      ],
+      "MIL": [
+       "Nate Ament (probable, P(out)=0.15): +0.05/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.6784,
+    "exp_margin": 5.98,
+    "sd_margin": 13.02,
+    "exp_total": 228.1,
+    "sd_total": 18.71,
+    "margin_p10_p50_p90": [
+     -11.0,
+     6.0,
+     22.0
+    ],
+    "total_p10_p50_p90": [
+     205.0,
+     228.0,
+     252.0
+    ],
+    "ot_rate": 0.0268
+   }
+  },
+  {
+   "game_id": "2026-10-21-ATL-ORL",
+   "event_id": "85e6e4e2404ef7268659739997758da1",
+   "away": "ATL",
+   "home": "ORL",
+   "tip_et": "2026-10-21T19:10:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 4.99,
+     "total": 227.8,
+     "pace": 101.8,
+     "exp_ortg": {
+      "ORL": 113.1,
+      "ATL": 110.6
+     },
+     "net_rating": {
+      "ORL": 0.35,
+      "ATL": -2.2
+     },
+     "injury_net_per100": {
+      "ORL": 0.706,
+      "ATL": 0.0
+     },
+     "injury_notes": {
+      "ORL": [
+       "Anthony Black (out, P(out)=1.00): -0.27/100",
+       "Noah Penda (out, P(out)=1.00): +0.97/100"
+      ],
+      "ATL": []
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.6517,
+    "exp_margin": 5.04,
+    "sd_margin": 13.03,
+    "exp_total": 227.7,
+    "sd_total": 18.73,
+    "margin_p10_p50_p90": [
+     -12.0,
+     5.0,
+     21.0
+    ],
+    "total_p10_p50_p90": [
+     204.0,
+     227.0,
+     252.0
+    ],
+    "ot_rate": 0.0253
+   }
+  },
+  {
+   "game_id": "2026-10-21-CHA-BKN",
+   "event_id": "47cc511bb5ce50f715e3625ce5ef77ee",
+   "away": "CHA",
+   "home": "BKN",
+   "tip_et": "2026-10-21T19:30:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": -1.18,
+     "total": 223.2,
+     "pace": 96.2,
+     "exp_ortg": {
+      "BKN": 114.2,
+      "CHA": 117.9
+     },
+     "net_rating": {
+      "BKN": -9.1,
+      "CHA": -5.37
+     },
+     "injury_net_per100": {
+      "BKN": 0.0,
+      "CHA": -4.713
+     },
+     "injury_notes": {
+      "BKN": [],
+      "CHA": [
+       "Kon Knueppel (out, P(out)=1.00): -2.43/100",
+       "Coby White (out, P(out)=1.00): -2.28/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.4715,
+    "exp_margin": -1.13,
+    "sd_margin": 13.04,
+    "exp_total": 223.2,
+    "sd_total": 18.83,
+    "margin_p10_p50_p90": [
+     -18.0,
+     -1.0,
+     15.0
+    ],
+    "total_p10_p50_p90": [
+     200.0,
+     223.0,
+     247.0
+    ],
+    "ot_rate": 0.0349
+   }
+  },
+  {
+   "game_id": "2026-10-21-CHI-TOR",
+   "event_id": "60431a347feac3f1c7ed925b8b769ec5",
+   "away": "CHI",
+   "home": "TOR",
+   "tip_et": "2026-10-21T19:40:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 14.88,
+     "total": 231.9,
+     "pace": 101.2,
+     "exp_ortg": {
+      "TOR": 120.8,
+      "CHI": 108.4
+     },
+     "net_rating": {
+      "TOR": 5.1,
+      "CHI": -7.23
+     },
+     "injury_net_per100": {
+      "TOR": 0.0,
+      "CHI": -0.665
+     },
+     "injury_notes": {
+      "TOR": [],
+      "CHI": [
+       "Nic Claxton (out, P(out)=1.00): -0.78/100",
+       "Leonard Miller (probable, P(out)=0.15): +0.11/100",
+       "Isaac Okoro (probable, P(out)=0.15): +0.00/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.8744,
+    "exp_margin": 14.94,
+    "sd_margin": 13.01,
+    "exp_total": 231.9,
+    "sd_total": 18.63,
+    "margin_p10_p50_p90": [
+     -2.0,
+     15.0,
+     31.0
+    ],
+    "total_p10_p50_p90": [
+     209.0,
+     232.0,
+     256.0
+    ],
+    "ot_rate": 0.017
+   }
+  },
+  {
+   "game_id": "2026-10-21-MIN-MIA",
+   "event_id": "93cdd8e4ade5697cfccf42ee42c4d207",
+   "away": "MIN",
+   "home": "MIA",
+   "tip_et": "2026-10-21T19:40:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 4.89,
+     "total": 240.3,
+     "pace": 103.2,
+     "exp_ortg": {
+      "MIA": 117.6,
+      "MIN": 115.2
+     },
+     "net_rating": {
+      "MIA": 1.74,
+      "MIN": -0.67
+     },
+     "injury_net_per100": {
+      "MIA": 0.0,
+      "MIN": -1.587
+     },
+     "injury_notes": {
+      "MIA": [],
+      "MIN": [
+       "Donte DiVincenzo (out, P(out)=1.00): -1.59/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.6494,
+    "exp_margin": 4.93,
+    "sd_margin": 13.04,
+    "exp_total": 240.3,
+    "sd_total": 18.76,
+    "margin_p10_p50_p90": [
+     -12.0,
+     5.0,
+     21.0
+    ],
+    "total_p10_p50_p90": [
+     217.0,
+     240.0,
+     264.0
+    ],
+    "ot_rate": 0.0274
+   }
+  },
+  {
+   "game_id": "2026-10-21-IND-NOP",
+   "event_id": "fd33c09c84ab4c2fe6955d59f8dc5dd2",
+   "away": "IND",
+   "home": "NOP",
+   "tip_et": "2026-10-21T20:10:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": -3.38,
+     "total": 238.5,
+     "pace": 101.1,
+     "exp_ortg": {
+      "NOP": 115.1,
+      "IND": 120.8
+     },
+     "net_rating": {
+      "NOP": -5.77,
+      "IND": -0.05
+     },
+     "injury_net_per100": {
+      "NOP": 0.0,
+      "IND": -2.225
+     },
+     "injury_notes": {
+      "NOP": [],
+      "IND": [
+       "T.J. McConnell (out, P(out)=1.00): -0.78/100",
+       "Aaron Nesmith (out, P(out)=1.00): -1.44/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.4022,
+    "exp_margin": -3.32,
+    "sd_margin": 13.04,
+    "exp_total": 238.5,
+    "sd_total": 18.76,
+    "margin_p10_p50_p90": [
+     -20.0,
+     -3.0,
+     13.0
+    ],
+    "total_p10_p50_p90": [
+     215.0,
+     238.0,
+     263.0
+    ],
+    "ot_rate": 0.0297
+   }
+  },
+  {
+   "game_id": "2026-10-21-UTA-MEM",
+   "event_id": "e6769c813dd625b622df94c14a562ce2",
+   "away": "UTA",
+   "home": "MEM",
+   "tip_et": "2026-10-21T20:10:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 7.83,
+     "total": 241.0,
+     "pace": 103.6,
+     "exp_ortg": {
+      "MEM": 118.9,
+      "UTA": 113.7
+     },
+     "net_rating": {
+      "MEM": -1.5,
+      "UTA": -6.74
+     },
+     "injury_net_per100": {
+      "MEM": -0.428,
+      "UTA": -1.88
+     },
+     "injury_notes": {
+      "MEM": [
+       "Isaiah Stewart (doubtful, P(out)=0.85): -0.43/100"
+      ],
+      "UTA": [
+       "Jusuf Nurkic (out, P(out)=1.00): -1.88/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.7276,
+    "exp_margin": 7.89,
+    "sd_margin": 13.02,
+    "exp_total": 241.0,
+    "sd_total": 18.69,
+    "margin_p10_p50_p90": [
+     -9.0,
+     8.0,
+     24.0
+    ],
+    "total_p10_p50_p90": [
+     218.0,
+     241.0,
+     265.0
+    ],
+    "ot_rate": 0.0252
+   }
+  },
+  {
+   "game_id": "2026-10-21-DAL-HOU",
+   "event_id": "af2f084075391e55ba2a596e7846bb40",
+   "away": "DAL",
+   "home": "HOU",
+   "tip_et": "2026-10-21T20:40:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 13.42,
+     "total": 224.7,
+     "pace": 99.0,
+     "exp_ortg": {
+      "HOU": 119.1,
+      "DAL": 108.0
+     },
+     "net_rating": {
+      "HOU": 4.03,
+      "DAL": -7.1
+     },
+     "injury_net_per100": {
+      "HOU": -0.34,
+      "DAL": -4.69
+     },
+     "injury_notes": {
+      "HOU": [
+       "Steven Adams (questionable, P(out)=0.50): -0.34/100"
+      ],
+      "DAL": [
+       "Santi Aldama (out, P(out)=1.00): -1.16/100",
+       "Dereck Lively II (out, P(out)=1.00): -3.19/100",
+       "B depth: 2.0 expected out -> synergy -0.35/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.8483,
+    "exp_margin": 13.47,
+    "sd_margin": 13.02,
+    "exp_total": 224.7,
+    "sd_total": 18.62,
+    "margin_p10_p50_p90": [
+     -4.0,
+     14.0,
+     30.0
+    ],
+    "total_p10_p50_p90": [
+     201.0,
+     224.0,
+     249.0
+    ],
+    "ot_rate": 0.0182
+   }
+  },
+  {
+   "game_id": "2026-10-21-GSW-LAL",
+   "event_id": "6fff70f4bf196dba25060a5775a03b54",
+   "away": "GSW",
+   "home": "LAL",
+   "tip_et": "2026-10-21T22:00:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 9.92,
+     "total": 227.5,
+     "pace": 98.4,
+     "exp_ortg": {
+      "LAL": 119.4,
+      "GSW": 111.8
+     },
+     "net_rating": {
+      "LAL": 0.28,
+      "GSW": -7.37
+     },
+     "injury_net_per100": {
+      "LAL": 0.016,
+      "GSW": -9.466
+     },
+     "injury_notes": {
+      "LAL": [
+       "Collin Sexton (questionable, P(out)=0.50): +0.02/100"
+      ],
+      "GSW": [
+       "Jimmy Butler (out, P(out)=1.00): -3.64/100",
+       "Stephen Curry (probable, P(out)=0.15): -0.74/100",
+       "Moses Moody (out, P(out)=1.00): -1.04/100",
+       "Brandin Podziemski (out, P(out)=1.00): -1.71/100",
+       "Kristaps Porzingis (out, P(out)=1.00): -1.91/100",
+       "G depth: 2.1 expected out -> synergy -0.43/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.7751,
+    "exp_margin": 9.98,
+    "sd_margin": 13.02,
+    "exp_total": 227.4,
+    "sd_total": 18.62,
+    "margin_p10_p50_p90": [
+     -7.0,
+     10.0,
+     26.0
+    ],
+    "total_p10_p50_p90": [
+     204.0,
+     227.0,
+     251.0
+    ],
+    "ot_rate": 0.0209
+   }
+  },
+  {
+   "game_id": "2026-10-21-PHX-POR",
+   "event_id": "71e24359951927c356bd8c852fb867dd",
+   "away": "PHX",
+   "home": "POR",
+   "tip_et": "2026-10-21T22:10:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 4.91,
+     "total": 232.6,
+     "pace": 99.4,
+     "exp_ortg": {
+      "POR": 118.3,
+      "PHX": 115.8
+     },
+     "net_rating": {
+      "POR": 2.02,
+      "PHX": -0.51
+     },
+     "injury_net_per100": {
+      "POR": -1.814,
+      "PHX": -0.647
+     },
+     "injury_notes": {
+      "POR": [
+       "Deni Avdija (questionable, P(out)=0.50): -1.54/100",
+       "Shaedon Sharpe (out, P(out)=1.00): -0.27/100"
+      ],
+      "PHX": [
+       "Luke Kennard (questionable, P(out)=0.50): -0.15/100",
+       "Mark Williams (out, P(out)=1.00): -0.49/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.6505,
+    "exp_margin": 4.96,
+    "sd_margin": 13.04,
+    "exp_total": 232.7,
+    "sd_total": 18.74,
+    "margin_p10_p50_p90": [
+     -12.0,
+     5.0,
+     21.0
+    ],
+    "total_p10_p50_p90": [
+     209.0,
+     232.0,
+     257.0
+    ],
+    "ot_rate": 0.0276
+   }
+  },
+  {
+   "game_id": "2026-10-21-SAC-LAC",
+   "event_id": "f6be3e587d43c3821d8f059c3a1f1967",
+   "away": "SAC",
+   "home": "LAC",
+   "tip_et": "2026-10-21T22:40:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 4.27,
+     "total": 218.0,
+     "pace": 97.2,
+     "exp_ortg": {
+      "LAC": 113.1,
+      "SAC": 111.2
+     },
+     "net_rating": {
+      "LAC": -7.32,
+      "SAC": -9.25
+     },
+     "injury_net_per100": {
+      "LAC": -2.622,
+      "SAC": -0.877
+     },
+     "injury_notes": {
+      "LAC": [
+       "Brandon Ingram (out, P(out)=1.00): -1.16/100",
+       "Max Strus (out, P(out)=1.00): -1.11/100",
+       "W depth: 2.0 expected out -> synergy -0.35/100"
+      ],
+      "SAC": [
+       "Malik Monk (questionable, P(out)=0.50): -0.33/100",
+       "Maxime Raynaud (out, P(out)=1.00): +0.34/100",
+       "Ben Simmons (out, P(out)=1.00): -0.89/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.6329,
+    "exp_margin": 4.33,
+    "sd_margin": 13.03,
+    "exp_total": 218.0,
+    "sd_total": 18.83,
+    "margin_p10_p50_p90": [
+     -12.0,
+     5.0,
+     21.0
+    ],
+    "total_p10_p50_p90": [
+     195.0,
+     218.0,
+     242.0
+    ],
+    "ot_rate": 0.027
+   }
+  }
+ ]
+}

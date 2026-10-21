@@ -231,3 +231,48 @@ def test_opinion_with_missed_close_is_kept_and_flagged(world):
     close_out_opinions(store, log)
     row = log.rows()[0]
     assert row["clv_method"] == "close_missing" and row["clv_pct"] is None
+
+
+def _late_payload(generated_at):
+    return {
+        "model_version": "nba-sim 0.2.0", "generated_at": generated_at, "slate_date": "2026-10-22",
+        "games": [
+            {"game_id": "2026-10-22-NYK-BOS", "away": "NYK", "home": "BOS",
+             "projection": {"structural": {"home_margin": 9.0, "total": 210.0}},
+             "simulation": {"sd_margin": 13.0, "sd_total": 18.8}},
+            {"game_id": "2026-10-22-ORL-MIA", "away": "ORL", "home": "MIA",
+             "projection": {"structural": {"home_margin": 8.5, "total": 230.0}},
+             "simulation": {"sd_margin": 13.0, "sd_total": 18.8}},
+        ],
+    }
+
+
+def test_late_projection_needs_a_later_snapshot_then_holds_and_stakes(world):
+    from market.run_snapshots import decide_now
+
+    clock, api, store, client, log = world
+    plan(store, client, DAY)
+    clock["now"] = at(12, 1)
+    run_due(store, client, clock["now"])
+    # Projection made at 13:30 ET, after the noon snapshot: refused against it (as-of rule).
+    projections = from_nba_sim_payload(_late_payload(at(13, 30).isoformat()))
+    msgs = record_opinions(store, log, projections, DAY)
+    assert log.rows() == [] and all("take one with `decide`" in m for m in msgs)
+
+    clock["now"] = at(13, 35)
+    before = api.remaining
+    msgs = decide_now(store, client, DAY, projections, clock["now"])
+    assert any(m.startswith("DONE sides_decision") for m in msgs)
+    assert before - api.remaining == 2  # spreads + totals, one region
+
+    msgs = record_opinions(store, log, projections, DAY, hold_markets=frozenset({"totals"}))
+    rows = log.rows()
+    assert len(rows) == 4
+    assert all(r["timestamp_et"].startswith("2026-10-22T13:35") for r in rows)
+    totals = [r for r in rows if r["market"] == "totals"]
+    assert all(r["pass_reason"] == "model_hold" and r["stake_u"] == 0 for r in totals)
+    sides = [r for r in rows if r["market"] == "spreads"]
+    assert all(r["gate_pass"] and r["stake_u"] > 0 for r in sides)  # both home sides pass
+    # Both home sides share one thesis: combined stake <= the shared-thesis cap.
+    assert sum(r["stake_u"] for r in sides) <= C.SHARED_THESIS_CAP_U + 1e-9
+    assert all(r["stake_u"] <= C.PER_GAME_CAP_U for r in rows)

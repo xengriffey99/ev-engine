@@ -15,9 +15,13 @@ MODEL_VERSION = "nba-sim 0.1.0 (opening-night priors)"
 
 
 def _team_ratings(t: dict, inj_net: float) -> dict:
+    """Last-season team ratings are regressed toward the league (offseason carryover).
+    A roster-aware prior (t["rating_prior"] == "epm": summed expected player EPM, already
+    shrunk career projections) is used as-is, so it is not shrunk twice."""
     lg = PRIORS.league_ortg
-    off = ff.regress_rating(t["ortg"]) + 0.5 * t["roster_delta"] + 0.5 * inj_net
-    deff = ff.regress_rating(t["drtg"]) - 0.5 * t["roster_delta"] - 0.5 * inj_net
+    reg = (lambda r: r) if t.get("rating_prior") == "epm" else ff.regress_rating
+    off = reg(t["ortg"]) + 0.5 * t["roster_delta"] + 0.5 * inj_net
+    deff = reg(t["drtg"]) - 0.5 * t["roster_delta"] - 0.5 * inj_net
     return {"off": off, "def": deff, "net": off - deff, "pace": pace.regress_pace(t["pace"]), "lg": lg}
 
 

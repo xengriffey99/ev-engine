@@ -1,0 +1,72 @@
+{
+ "slate_date": "2026-10-21",
+ "source": "The Odds API featured odds snapshot 2026-10-21 12:00:01 ET (sides_decision)",
+ "games": [
+  {
+   "event_id": "164cc0396837d5ff433215ffd3279283",
+   "tip_et": "2026-10-21T19:00:00-04:00",
+   "away": "MIL",
+   "home": "WAS"
+  },
+  {
+   "event_id": "85e6e4e2404ef7268659739997758da1",
+   "tip_et": "2026-10-21T19:10:00-04:00",
+   "away": "ATL",
+   "home": "ORL"
+  },
+  {
+   "event_id": "47cc511bb5ce50f715e3625ce5ef77ee",
+   "tip_et": "2026-10-21T19:30:00-04:00",
+   "away": "CHA",
+   "home": "BKN"
+  },
+  {
+   "event_id": "60431a347feac3f1c7ed925b8b769ec5",
+   "tip_et": "2026-10-21T19:40:00-04:00",
+   "away": "CHI",
+   "home": "TOR"
+  },
+  {
+   "event_id": "93cdd8e4ade5697cfccf42ee42c4d207",
+   "tip_et": "2026-10-21T19:40:00-04:00",
+   "away": "MIN",
+   "home": "MIA"
+  },
+  {
+   "event_id": "fd33c09c84ab4c2fe6955d59f8dc5dd2",
+   "tip_et": "2026-10-21T20:10:00-04:00",
+   "away": "IND",
+   "home": "NOP"
+  },
+  {
+   "event_id": "e6769c813dd625b622df94c14a562ce2",
+   "tip_et": "2026-10-21T20:10:00-04:00",
+   "away": "UTA",
+   "home": "MEM"
+  },
+  {
+   "event_id": "af2f084075391e55ba2a596e7846bb40",
+   "tip_et": "2026-10-21T20:40:00-04:00",
+   "away": "DAL",
+   "home": "HOU"
+  },
+  {
+   "event_id": "6fff70f4bf196dba25060a5775a03b54",
+   "tip_et": "2026-10-21T22:00:00-04:00",
+   "away": "GSW",
+   "home": "LAL"
+  },
+  {
+   "event_id": "71e24359951927c356bd8c852fb867dd",
+   "tip_et": "2026-10-21T22:10:00-04:00",
+   "away": "PHX",
+   "home": "POR"
+  },
+  {
+   "event_id": "f6be3e587d43c3821d8f059c3a1f1967",
+   "tip_et": "2026-10-21T22:40:00-04:00",
+   "away": "SAC",
+   "home": "LAC"
+  }
+ ]
+}

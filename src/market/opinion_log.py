@@ -49,7 +49,8 @@ TRAILING_COLUMNS = (
 EXPORT_COLUMNS = LEADING_COLUMNS + SPEC_COLUMNS + TRAILING_COLUMNS
 
 PASS_REASONS = frozenset(
-    {"below_gate", "outsized_edge", "restricted", "stale_reference", "no_bettable_price"}
+    {"below_gate", "outsized_edge", "restricted", "stale_reference", "no_bettable_price",
+     "model_hold"}  # model_hold: lane suspended for a known structural fault; close + CLV still captured
 )
 RESULTS = frozenset({"win", "loss", "push", "void"})
 _TOL = 1e-9
