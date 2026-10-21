@@ -296,7 +296,52 @@ def tick(store: MarketStore, client: OddsApiClient, log: OpinionLog, now: dateti
         msgs = record_opinions(store, log, projections, day)
         messages += [m for m in msgs if not m.startswith(("already logged", "No completed"))]
     messages += close_out_opinions(store, log)
+    from . import pilot
+    messages += pilot.record_pilot(log.db_path, log.rows(), day)
+    messages += grade_results(store, log, now)
     return messages
+
+
+RESULT_FETCH_EVERY = timedelta(minutes=15)
+RESULT_DELAY = timedelta(hours=2, minutes=45)  # tip + this before a game is expected final
+
+
+def event_teams(store: MarketStore) -> dict[str, tuple[str, str]]:
+    rows = store.conn.execute("SELECT DISTINCT event_id, home_team, away_team FROM quotes").fetchall()
+    return {r["event_id"]: (r["home_team"], r["away_team"]) for r in rows}
+
+
+def grade_results(store: MarketStore, log: OpinionLog, now: datetime, fetch=None) -> list[str]:
+    """Fill `result` on game-market rows once their games are final (free ESPN scoreboard)."""
+    from .quotes import parse_ts
+    from .results import fetch_finals, grade_rows
+
+    open_rows = [r for r in log.rows() if not r["result"] and r["market"] in (C.SPREAD_LIKE_MARKETS | C.TOTAL_LIKE_MARKETS)
+                 and r["clv_method"] is not None]
+    if not open_rows:
+        return []
+    tips = {r["event_id"]: parse_ts(r["commence_utc"]) for r in
+            store.conn.execute("SELECT DISTINCT event_id, commence_utc FROM quotes").fetchall()}
+    due = [r for r in open_rows if r["game_id"] in tips and now >= tips[r["game_id"]] + RESULT_DELAY]
+    if not due:
+        return []
+    last = store.conn.execute("SELECT value FROM meta WHERE key = 'results_last_fetch'").fetchone()
+    if last and now - parse_ts(last[0]) < RESULT_FETCH_EVERY:
+        return []
+    store.conn.execute("INSERT OR REPLACE INTO meta VALUES ('results_last_fetch', ?)", (now.isoformat(),))
+    store.conn.commit()
+    fetch = fetch or fetch_finals
+    days = sorted({tips[r["game_id"]].astimezone(ET).date() for r in due})
+    finals = []
+    for d in days:
+        try:
+            finals += fetch(d)
+        except Exception as err:  # network: retry on a later tick
+            return [f"results fetch failed for {d}: {err}"]
+    graded = grade_rows(due, event_teams(store), finals)
+    for oid, res in graded.items():
+        log.set_result(oid, res)
+    return [f"graded {len(graded)} row(s)"] if graded else []
 
 
 def close_plan_from(store: MarketStore):
@@ -326,6 +371,12 @@ def main(argv: list[str] | None = None) -> int:
     p_exp = sub.add_parser("export")
     p_exp.add_argument("--out", type=Path, default=Path("data/opinion_log.csv"))
     sub.add_parser("status")
+    p_pil = sub.add_parser("pilot", help="pilot tier: status | picks --date | placed --id --book --price")
+    p_pil.add_argument("action", choices=["status", "picks", "placed"])
+    p_pil.add_argument("--date", type=date.fromisoformat, default=datetime.now(ET).date())
+    p_pil.add_argument("--id")
+    p_pil.add_argument("--book")
+    p_pil.add_argument("--price", type=float)
     p_sum = sub.add_parser("summary", help="aggregate status with no prices (safe to publish)")
     p_sum.add_argument("--out", type=Path, default=None)
     args = ap.parse_args(argv)
@@ -373,6 +424,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"credits remaining (last seen): {store.remaining}")
         for j in store.jobs():
             print(f"{j.date_et} {j.kind:15s} {j.run_at.astimezone(ET):%H:%M} ET  {j.status:14s} cost~{j.est_cost}")
+    elif args.cmd == "pilot":
+        from . import pilot
+        log = OpinionLog(args.db, close_plan=close_plan_from(store))
+        if args.action == "status":
+            print(json.dumps(pilot.status(args.db, log.rows(), args.date), indent=1, default=str))
+        elif args.action == "picks":
+            for b in pilot.picks(args.db, args.date):
+                print(f"{b['status']:11s} {b['side']} {b['line']:+g} @{b['book']} {b['price_american']:+.0f} "
+                      f"pilot {b['pilot_stake_u']:.2f}u (paper {b['paper_stake_u']:.2f}u) {b['note'] or ''}")
+        else:
+            pilot.mark_placed(args.db, args.id, args.book, args.price, now_utc())
+            print(f"marked {args.id} placed at {args.price:+.0f} @{args.book}")
     elif args.cmd == "summary":
         log = OpinionLog(args.db, close_plan=close_plan_from(store))
         text = summary_markdown(store, log)
@@ -413,6 +476,14 @@ def summary_markdown(store: MarketStore, log: OpinionLog) -> str:
         else "| Close captured | n/a |",
         f"| Gate passes | {sum(1 for r in rows if r['gate_pass'])} |",
     ]
+    from . import pilot
+    try:
+        st = pilot.status(log.db_path, rows, now_utc().astimezone(ET).date())
+        checks = ", ".join(f"{k} {'ok' if c['passed'] else 'pending'}" for k, c in st["checks"].items())
+        lines += ["", f"Pilot tier: {'ACTIVE' if st['active'] else 'inactive'} ({checks}; "
+                      f"kill switch {'STOP' if st['kill_switch']['stop'] else 'ok'} at n={st['kill_switch']['n']})"]
+    except Exception as err:  # status must never break the summary
+        lines += ["", f"Pilot tier: status unavailable ({type(err).__name__})"]
     by_model = Counter(r["model_version"] for r in rows)
     lines += ["", "| Model version | Rows |", "|---|---|"] + [f"| {m} | {n} |" for m, n in by_model.items()]
     return "\n".join(lines) + "\n"

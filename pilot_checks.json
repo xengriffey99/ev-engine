@@ -1,0 +1,7 @@
+{
+ "note": "Manual pilot entry checks (NBA_CONTEXT.md section 15). No prices here: this file is public. close_capture is automatic.",
+ "checks": {
+  "novig_fee": {"passed": false, "evidence": "awaiting Chris: confirm Novig pregame fee in the app"},
+  "home_lean": {"passed": true, "evidence": "2026-10-21 diagnosis (n=11): market = 0.97 + 0.73 x model neutral margin; model HCA 2.4 vs market-implied ~1.0; injury effects ~1.3-1.5x market. Kept under the shared-thesis cap; nba-sim 0.3.0 fix pending"}
+ }
+}
