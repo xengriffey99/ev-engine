@@ -143,7 +143,7 @@ def record_opinions(store: MarketStore, log: OpinionLog, projections, day: date,
         if quotes:
             snaps.append((max(q.fetched_at for q in quotes), quotes))
     snaps.sort(key=lambda s: s[0])
-    existing = {(r["game_id"], r["market"], r["model_version"]) for r in log.rows()}
+    existing = {(r["game_id"], r["market"], r["model_version"], r["player"]) for r in log.rows()}
     pending: list[tuple] = []  # (opinion, projection)
     unmatched: list[str] = []
     for p in projections:
@@ -224,10 +224,10 @@ def decide_now(store: MarketStore, client: OddsApiClient, day: date, projections
 def _log_all(log: OpinionLog, opinions, existing: set, quiet_dupes: bool = False) -> list[str]:
     messages: list[str] = []
     for op in opinions:
-        key = (op.game_id, op.market, op.model_version)
+        key = (op.game_id, op.market, op.model_version, op.player)
         if key in existing:
             if not quiet_dupes:
-                messages.append(f"already logged {op.game_id} {op.market}")
+                messages.append(f"already logged {op.game_id} {op.market}" + (f" {op.player}" if op.player else ""))
             continue
         try:
             oid = log.record(op)
@@ -238,8 +238,9 @@ def _log_all(log: OpinionLog, opinions, existing: set, quiet_dupes: bool = False
         row = next(r for r in log.rows() if r["opinion_id"] == oid)
         verdict = "BET-QUALIFIED" if row["gate_pass"] else f"pass ({row['pass_reason']})"
         line = f"{op.line:+g}" if op.market in C.SPREAD_LIKE_MARKETS else f"{op.line:g}"
+        who = f"{op.player} " if op.player else ""
         messages.append(
-            f"logged [{op.model_version}] {op.market} {op.side} {line} {row['price_american']:+.0f} "
+            f"logged [{op.model_version}] {op.market} {who}{op.side} {line} {row['price_american']:+.0f} "
             f"@{op.book}: EV {row['ev_pct'] * 100:+.2f}% -> {verdict}"
         )
     return messages
@@ -247,14 +248,14 @@ def _log_all(log: OpinionLog, opinions, existing: set, quiet_dupes: bool = False
 
 def record_baseline_opinions(store: MarketStore, log: OpinionLog, day: date) -> list[str]:
     """Market-baseline rows for every game in each completed decision snapshot (idempotent)."""
-    existing = {(r["game_id"], r["market"], r["model_version"]) for r in log.rows()}
+    existing = {(r["game_id"], r["market"], r["model_version"], r["player"]) for r in log.rows()}
     messages: list[str] = []
     for job in store.jobs(status=DONE, date_et=day.isoformat()):
         if job.kind != "sides_decision":
             continue
         opinions, skipped = build_baseline_opinions(store.load_quotes(job.snapshot_id))
         messages += _log_all(log, opinions, existing, quiet_dupes=True)
-        if any((o.game_id, o.market, o.model_version) not in existing for o in opinions):
+        if any((o.game_id, o.market, o.model_version, o.player) not in existing for o in opinions):
             messages += [f"skipped {s}" for s in skipped]
     return messages
 

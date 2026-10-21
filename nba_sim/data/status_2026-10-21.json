@@ -1,0 +1,17 @@
+{"source": "Official NBA Injury Report 10/21/26 01:30 PM ET (https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-21_01_30PM.pdf), read from the PDF in the browser; MIN, MIA, DAL, HOU rows",
+ "statuses": [
+  {"name": "Donte DiVincenzo", "team": "MIN", "status": "out"},
+  {"name": "Zyon Pullin", "team": "MIN", "status": "out"},
+  {"name": "Rocco Zikarsky", "team": "MIN", "status": "out"},
+  {"name": "Myron Gardner", "team": "MIA", "status": "available"},
+  {"name": "Vladislav Goldin", "team": "MIA", "status": "questionable"},
+  {"name": "Dru Smith", "team": "MIA", "status": "available"},
+  {"name": "Santi Aldama", "team": "DAL", "status": "out"},
+  {"name": "Tarik Biberovic", "team": "DAL", "status": "out"},
+  {"name": "Jett Howard", "team": "DAL", "status": "doubtful"},
+  {"name": "Dereck Lively II", "team": "DAL", "status": "out"},
+  {"name": "Caleb Martin", "team": "DAL", "status": "out"},
+  {"name": "Steven Adams", "team": "HOU", "status": "questionable"},
+  {"name": "Julian Phillips", "team": "HOU", "status": "questionable"}],
+ "two_way": ["Zyon Pullin", "Rocco Zikarsky"],
+ "two_way_note": "Only players the report lists as G League two-way are known; other two-way contracts are not flagged (ESTIMATE gap)."}
