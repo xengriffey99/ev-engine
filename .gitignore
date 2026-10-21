@@ -12,3 +12,8 @@ odds_api_key*
 __pycache__/
 .pytest_cache/
 *.pyc
+
+# nba_sim: keep the sourced pace table, never commit slate files (they carry book prices)
+!nba_sim/data/
+nba_sim/data/slate_*.json
+nba_sim/out/
