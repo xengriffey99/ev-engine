@@ -1,0 +1,14 @@
+# Runner state and odds data never go into git in plaintext
+data/
+state/
+*.db
+*.db-journal
+*.enc
+# Secrets
+.env
+*.key
+odds_api_key*
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc

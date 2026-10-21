@@ -1,0 +1,46 @@
+name: nba-ev-runner
+
+# Every 30 min; each run loops minute by minute for 55 min and queues behind the
+# previous one, so coverage is continuous. Runs outside 08:45-02:00 ET exit in seconds.
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "Minutes this run should cover"
+        default: "55"
+
+concurrency:
+  group: nba-ev-runner
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DATA_PASSPHRASE: ${{ secrets.DATA_PASSPHRASE }}
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      NBA_EV_BET_STATE: ${{ vars.NBA_EV_BET_STATE || 'ME' }}
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check secrets
+        run: |
+          [ -n "$ODDS_API_KEY" ] || { echo "::error::Add the ODDS_API_KEY repository secret"; exit 1; }
+          [ -n "$DATA_PASSPHRASE" ] || { echo "::error::Add the DATA_PASSPHRASE repository secret"; exit 1; }
+      - name: Restore state
+        run: scripts/ci_state.sh restore
+      - name: Snapshot loop
+        run: scripts/ci_loop.sh "${{ github.event.inputs.minutes || '55' }}"
+      - name: Save state
+        if: always()
+        run: scripts/ci_state.sh save
