@@ -6,7 +6,7 @@ Spec vector (NBA_V2_PLAN Phase 2): p = 0.55 at -110 -> f* = 5.5%, 1/16 -> 0.34u.
 
 Caps:
 - per game: 2u across every leg on one game (enforced again by the opinion log);
-- shared thesis (PROPOSED 2026-10-21, pending Chris's approval): gate passes from one
+- shared thesis (approved by Chris 2026-10-21): gate passes from one
   model version, one lane and one direction on one slate (e.g. every home side) ride a
   common model factor, so they are one position (NBA_CONTEXT.md section 12, "collapse
   correlated +EV legs into one position on the shared thesis"). Their stakes are scaled

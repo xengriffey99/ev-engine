@@ -51,7 +51,7 @@ BLEND_W = {SIDES_TOTALS: 0.40, PROPS: 0.50}
 EDGE_GATE = {SIDES_TOTALS: 0.025, PROPS: 0.035}
 TIER2_CAP = 0.02  # max probability move from judgment inputs
 PER_GAME_CAP_U = 2.0
-# PROPOSED 2026-10-21 (pending approval): gate passes sharing one model, lane and direction
+# Approved 2026-10-21 (Chris): gate passes sharing one model, lane and direction
 # on one slate are one position (section 12); their combined stake is capped here.
 SHARED_THESIS_CAP_U = 2.0
 KELLY_FRACTION = 1.0 / 16.0

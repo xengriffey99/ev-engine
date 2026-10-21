@@ -31,6 +31,13 @@ from market.selection import NoQuoteError, best_price, reference_prob
 from .engine import MarketEnv, PlayerIn, prob_over, restriction, summarize
 
 MODEL_VERSION = "props-v1 (D&T rates, market env)"
+# Record-only until ALL of these hold (approved by Chris 2026-10-21); run with --hold until then:
+#   1. 300+ props-v1 opinions with captured closes, mean no-vig CLV > 0 (props lane)
+#   2. P(over) reliability within +/-2 pts per decile vs the de-vigged two-way close
+#   3. CLV >= 0 separately for star unders and role-player overs
+#   4. outsized-edge ceiling fit (section 14), so +20%-EV rows log as passes
+LIFT_HOLD_CRITERIA = ("300+ closed opinions, mean no-vig CLV > 0", "reliability +/-2 pts per decile",
+                      "CLV >= 0 for star unders and role overs separately", "outsized-edge ceiling fit")
 STAT_MARKET = {"points": "player_points"}
 
 
