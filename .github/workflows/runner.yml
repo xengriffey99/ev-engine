@@ -1,7 +1,9 @@
 name: nba-ev-runner
 
-# Every 30 min; each run loops minute by minute for 55 min and queues behind the
-# previous one, so coverage is continuous. Runs outside 08:45-02:00 ET exit in seconds.
+# Coverage chain: a dispatched run loops minute by minute for `minutes` (default 330 when
+# chained), then dispatches the next run, so coverage does not depend on cron. Outside
+# 08:45-02:00 ET a dispatched run waits for the window; a cron run exits at once.
+# The cron schedule stays as a backup (GitHub delays schedules on new repos by hours).
 on:
   schedule:
     - cron: "7,37 * * * *"
@@ -17,11 +19,12 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write   # the chain step dispatches the next run
 
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 350
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DATA_PASSPHRASE: ${{ secrets.DATA_PASSPHRASE }}
@@ -40,7 +43,12 @@ jobs:
       - name: Restore state
         run: scripts/ci_state.sh restore
       - name: Snapshot loop
-        run: scripts/ci_loop.sh "${{ github.event.inputs.minutes || '55' }}"
+        run: scripts/ci_loop.sh "${{ github.event.inputs.minutes || '55' }}" "${{ github.event_name }}"
       - name: Save state
         if: always()
         run: scripts/ci_state.sh save
+      - name: Chain next run
+        if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run runner.yml --repo "$GITHUB_REPOSITORY" --ref main -f minutes=330
