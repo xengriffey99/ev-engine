@@ -1,0 +1,127 @@
+{
+ "source": "ESPN Hollinger Team Statistics, 2025-26 Regular Season (https://www.espn.com/nba/hollinger/teamstats/_/sort/paceFactor/year/2026)",
+ "retrieved": "2026-10-21T12:56-04:00",
+ "stat": "Hollinger OFF EFF / DEF EFF (points per 100 possessions, Hollinger scale)",
+ "eff": {
+  "MIA": {
+   "off": 113.9,
+   "def": 111.5
+  },
+  "CHI": {
+   "off": 110.5,
+   "def": 115.1
+  },
+  "UTA": {
+   "off": 111.2,
+   "def": 119.3
+  },
+  "DAL": {
+   "off": 108.5,
+   "def": 113.9
+  },
+  "ATL": {
+   "off": 113.2,
+   "def": 111.0
+  },
+  "MEM": {
+   "off": 109.7,
+   "def": 115.8
+  },
+  "WAS": {
+   "off": 108.2,
+   "def": 119.6
+  },
+  "POR": {
+   "off": 110.6,
+   "def": 111.7
+  },
+  "IND": {
+   "off": 108.5,
+   "def": 115.7
+  },
+  "ORL": {
+   "off": 111.7,
+   "def": 111.6
+  },
+  "CLE": {
+   "off": 116.3,
+   "def": 111.9
+  },
+  "MIN": {
+   "off": 114.1,
+   "def": 110.1
+  },
+  "NOP": {
+   "off": 111.4,
+   "def": 115.4
+  },
+  "SAS": {
+   "off": 116.6,
+   "def": 108.5
+  },
+  "PHI": {
+   "off": 112.5,
+   "def": 112.0
+  },
+  "DET": {
+   "off": 114.3,
+   "def": 106.6
+  },
+  "SAC": {
+   "off": 109.0,
+   "def": 118.0
+  },
+  "OKC": {
+   "off": 116.3,
+   "def": 104.8
+  },
+  "GSW": {
+   "off": 112.0,
+   "def": 112.6
+  },
+  "TOR": {
+   "off": 113.0,
+   "def": 110.0
+  },
+  "DEN": {
+   "off": 119.4,
+   "def": 114.7
+  },
+  "LAL": {
+   "off": 115.7,
+   "def": 113.3
+  },
+  "PHX": {
+   "off": 112.0,
+   "def": 110.7
+  },
+  "MIL": {
+   "off": 110.4,
+   "def": 116.4
+  },
+  "CHA": {
+   "off": 114.7,
+   "def": 111.9
+  },
+  "BKN": {
+   "off": 105.8,
+   "def": 116.0
+  },
+  "NYK": {
+   "off": 116.8,
+   "def": 110.2
+  },
+  "LAC": {
+   "off": 114.6,
+   "def": 112.8
+  },
+  "HOU": {
+   "off": 114.8,
+   "def": 110.2
+  },
+  "BOS": {
+   "off": 116.8,
+   "def": 109.7
+  }
+ }
+}
