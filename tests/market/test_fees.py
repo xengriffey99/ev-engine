@@ -20,7 +20,7 @@ def test_kalshi_fee_shrinks_toward_the_tails():
 
 def test_commission_on_net_winnings():
     assert effective_decimal("prophetx", 2.0) == pytest.approx(1.98)
-    assert effective_decimal("novig", 1.909) == pytest.approx(1 + 0.909 * 0.98)
+    assert effective_decimal("novig", 1.909) == pytest.approx(1.909)  # 0% pregame, confirmed 2026-10-22
 
 
 def test_sportsbooks_are_unchanged():

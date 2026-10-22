@@ -11,8 +11,7 @@ Sources (checked 2026-10-21):
   to 1 cent per order on top and is ignored here (small for orders of 10+ contracts).
 - ProphetX: commission on net winnings, 1% or 2% depending on the source
   (Legal Sports Report, 2026-10-06). 2% used: conservative.
-- Novig: UNVERIFIED. LSR says no fee on pregame trades; RotoWire says commission
-  on net winnings. 2% assumed (conservative) until confirmed in the app.
+- Novig: 0% pregame fee, confirmed in the app by Chris 2026-10-22 (was 2% assumed).
 Commission on net winnings c: $d_{net} = 1 + (d - 1)(1 - c)$.
 Reference (de-vig) prices are not fee-adjusted: fees change what you receive,
 not the market's probability.
@@ -23,11 +22,11 @@ from __future__ import annotations
 from .quotes import Quote
 
 KALSHI_TAKER_RATE = 0.07
-NET_WINNINGS_COMMISSION = {"prophetx": 0.02, "novig": 0.02}
+NET_WINNINGS_COMMISSION = {"prophetx": 0.02, "novig": 0.0}
 FEE_SOURCE = {
     "kalshi": "kalshi_taker_0.07p(1-p)",
     "prophetx": "commission_2pct_net_winnings",
-    "novig": "commission_2pct_net_winnings_UNVERIFIED",
+    "novig": "pregame_fee_0pct_confirmed_2026-10-22",
 }
 
 
