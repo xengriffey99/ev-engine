@@ -1,0 +1,72 @@
+{
+ "source_epm": "Dunks & Threes EPM feed (https://dunksandthrees.com/epm/__data.json), 'Expected impact and stats for Thursday, October 22, 2026 using preceding career data', 520 players; league means from all 30 teams (off -0.067, def 3.348)",
+ "retrieved_epm": "2026-10-22T11:40-04:00",
+ "method": "Team rating = sum(EPM_off/def x minutes/48) over top 240 projected minutes, centered on the 30-team mean. Same method as 10/21. Only the four teams playing 10/22 are included.",
+ "source_injuries": "Official NBA Injury Report 10/22/26 11:30 AM ET (https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-22_11_30AM.pdf), read from the PDF screenshot; a later report (1:30 PM) may change statuses",
+ "injury_rule": "Only players inside the healthy top-240 rotation carry a cost; P(play): questionable 0.50, out 0 (nba_sim priors, ESTIMATES)",
+ "teams": {
+  "OKC": {
+   "off_rel": 5.03,
+   "def_rel": 7.96
+  },
+  "DEN": {
+   "off_rel": 7.19,
+   "def_rel": -2.44
+  },
+  "CLE": {
+   "off_rel": 2.35,
+   "def_rel": 0.38
+  },
+  "PHI": {
+   "off_rel": 1.18,
+   "def_rel": -1.53
+  }
+ },
+ "injuries": [
+  {
+   "name": "Jarrett Allen",
+   "team": "CLE",
+   "pos": "C",
+   "pos_group": "B",
+   "epm": 5.57,
+   "minutes": 30.3,
+   "status": "questionable"
+  },
+  {
+   "name": "Nae'Qwan Tomlin",
+   "team": "CLE",
+   "pos": "F",
+   "pos_group": "W",
+   "epm": -1.7,
+   "minutes": 13.6,
+   "status": "out"
+  },
+  {
+   "name": "Spencer Jones",
+   "team": "DEN",
+   "pos": "F",
+   "pos_group": "W",
+   "epm": -2.63,
+   "minutes": 19.9,
+   "status": "questionable"
+  },
+  {
+   "name": "Julian Strawther",
+   "team": "DEN",
+   "pos": "G",
+   "pos_group": "G",
+   "epm": -2.99,
+   "minutes": 21,
+   "status": "out"
+  },
+  {
+   "name": "Thomas Sorber",
+   "team": "OKC",
+   "pos": "C",
+   "pos_group": "B",
+   "epm": -2.46,
+   "minutes": 13.4,
+   "status": "out"
+  }
+ ]
+}

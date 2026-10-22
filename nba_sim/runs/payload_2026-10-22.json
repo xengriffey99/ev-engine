@@ -1,0 +1,130 @@
+{
+ "model_version": "nba-sim 0.3.0 (measured HCA 1.7, rating shrink 0.73, injury scale 0.71)",
+ "slate_date": "2026-10-22",
+ "generated_at": "2026-10-22T15:37:13+00:00",
+ "inputs": {
+  "slate": "The Odds API job plan 2026-10-22 (event ids from close jobs); tips from ESPN scoreboard",
+  "ratings": "Dunks & Threes EPM feed (https://dunksandthrees.com/epm/__data.json), 'Expected impact and stats for Thursday, October 22, 2026 using preceding career data', 520 players; league means from all 30 teams (off -0.067, def 3.348) retrieved 2026-10-22T11:40-04:00",
+  "injuries": "Official NBA Injury Report 10/22/26 11:30 AM ET (https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-22_11_30AM.pdf), read from the PDF screenshot; a later report (1:30 PM) may change statuses",
+  "pace": "ESPN Hollinger Team Statistics, 2025-26 Regular Season (https://www.espn.com/nba/hollinger/teamstats/_/sort/paceFactor/year/2026) retrieved 2026-10-21T12:55-04:00",
+  "estimates": [
+   "P(play) by status: nba_sim priors (probable 0.85, questionable 0.50, doubtful 0.15)",
+   "replacement level EPM -2.0 (nba_sim prior)",
+   "home-court 2.4 pts (APPROX)",
+   "pace is 2025-26 (prior season), regressed 20% to league",
+   "travel/time zones not modeled; four factors, scheme and lineup pace modules neutral"
+  ]
+ },
+ "games": [
+  {
+   "game_id": "2026-10-22-CLE-PHI",
+   "event_id": "110e33c79c5ec8c0377702aff685f83b",
+   "away": "CLE",
+   "home": "PHI",
+   "tip_et": "2026-10-22T19:00:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 1.21,
+     "total": 235.2,
+     "pace": 100.3,
+     "exp_ortg": {
+      "PHI": 117.0,
+      "CLE": 117.5
+     },
+     "net_rating": {
+      "PHI": -0.26,
+      "CLE": 0.24
+     },
+     "injury_net_per100": {
+      "PHI": 0.0,
+      "CLE": -2.474
+     },
+     "injury_notes": {
+      "PHI": [],
+      "CLE": [
+       "Jarrett Allen (questionable, P(out)=0.50): -2.39/100",
+       "Nae'Qwan Tomlin (out, P(out)=1.00): -0.09/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.5419,
+    "exp_margin": 1.26,
+    "sd_margin": 13.03,
+    "exp_total": 235.3,
+    "sd_total": 18.77,
+    "margin_p10_p50_p90": [
+     -15.0,
+     2.0,
+     18.0
+    ],
+    "total_p10_p50_p90": [
+     212.0,
+     235.0,
+     259.0
+    ],
+    "ot_rate": 0.0294
+   }
+  },
+  {
+   "game_id": "2026-10-22-DEN-OKC",
+   "event_id": "223b2883b9b05a67329ef246384b85f1",
+   "away": "DEN",
+   "home": "OKC",
+   "tip_et": "2026-10-22T21:30:00-04:00",
+   "projection": {
+    "structural": {
+     "home_margin": 7.32,
+     "total": 232.3,
+     "pace": 98.5,
+     "exp_ortg": {
+      "OKC": 120.8,
+      "DEN": 115.1
+     },
+     "net_rating": {
+      "OKC": 9.57,
+      "DEN": 3.87
+     },
+     "injury_net_per100": {
+      "OKC": 0.128,
+      "DEN": 0.564
+     },
+     "injury_notes": {
+      "OKC": [
+       "Thomas Sorber (out, P(out)=1.00): +0.13/100"
+      ],
+      "DEN": [
+       "Spencer Jones (questionable, P(out)=0.50): +0.13/100",
+       "Julian Strawther (out, P(out)=1.00): +0.43/100"
+      ]
+     },
+     "situational": []
+    }
+   },
+   "simulation": {
+    "n": 10000,
+    "seed": 20261020,
+    "home_win_prob": 0.7136,
+    "exp_margin": 7.37,
+    "sd_margin": 13.02,
+    "exp_total": 232.2,
+    "sd_total": 18.77,
+    "margin_p10_p50_p90": [
+     -9.0,
+     8.0,
+     24.0
+    ],
+    "total_p10_p50_p90": [
+     209.0,
+     232.0,
+     256.0
+    ],
+    "ot_rate": 0.0247
+   }
+  }
+ ]
+}
