@@ -129,6 +129,9 @@ def opinion_group(book: str) -> str:
 # Reference quality, best to worst. Retail-only references are lower quality (NN4).
 REF_QUALITY_ORDER = ("sharp", "exchange", "consensus_retail", "single_retail")
 DEFAULT_DEVIG_METHOD = "power"
+# Approved 2026-10-22 (Chris): sides/totals decision pricing uses Pinnacle + exchange consensus
+# (equal-weight placeholder). CLV close grading stays Pinnacle-only.
+CONSENSUS_REF = True
 
 # --- CLV ------------------------------------------------------------------------
 # PLACEHOLDER estimates of the final-margin and final-total spread around the

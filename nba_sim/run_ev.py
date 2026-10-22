@@ -22,7 +22,7 @@ import numpy as np
 from nba_sim import engine, montecarlo as mc
 from nba_sim.config import PRIORS, SIM
 
-MODEL_VERSION = "nba-sim 0.2.0 (EPM roster prior, Hollinger pace)"
+MODEL_VERSION = "nba-sim 0.3.0 (measured HCA 1.7, rating shrink 0.73, injury scale 0.71)"
 HERE = Path(__file__).parent
 
 

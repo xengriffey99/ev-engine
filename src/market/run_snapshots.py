@@ -366,6 +366,7 @@ def main(argv: list[str] | None = None) -> int:
                       help="take an on-demand decision snapshot first (projection made after noon)")
     p_op.add_argument("--hold", default="", help="comma-separated markets logged as model_hold passes")
     sub.add_parser("close-out")
+    sub.add_parser("signal", help="adverse-selection tracker: price advantage vs later reference move")
     p_tick = sub.add_parser("tick", help="plan-if-needed + run-due + log + close-out (prints only changes)")
     p_tick.add_argument("--payload-dir", type=Path, default=Path("data/payloads"))
     p_exp = sub.add_parser("export")
@@ -402,6 +403,10 @@ def main(argv: list[str] | None = None) -> int:
         holds = frozenset(x.strip() for x in args.hold.split(",") if x.strip())
         for m in record_opinions(store, log, projections, day, hold_markets=holds):
             print(m)
+    elif args.cmd == "signal":
+        from .signal import signal_stats
+        log = OpinionLog(args.db, close_plan=close_plan_from(store))
+        print(json.dumps(signal_stats(log.rows()), indent=1))
     elif args.cmd in ("close-out", "export"):
         log = OpinionLog(args.db, close_plan=close_plan_from(store))
         if args.cmd == "close-out":

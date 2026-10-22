@@ -41,10 +41,14 @@ class Simulation:
 class Priors:
     league_ortg: float = 115.5        # APPROX 2025-26 league average
     league_pace: float = 99.6         # APPROX
-    hca_points: float = 2.4           # APPROX recent-season home-court value
+    hca_points: float = 1.7           # MEASURED: 2025-26 regular season, 1235 ESPN finals, mean home margin 1.72 (SE 0.47); pulled 2026-10-22
     net_carryover_rho: float = 0.70   # year-over-year regression of ratings
     pace_carryover: float = 0.80
     replacement_epm: float = -2.0
+    # PROVISIONAL 0.3.0 calibration from the 10/21 cross-section (n=11, one slate; refit weekly):
+    # market margin = 0.97 + 0.73 x model neutral margin, and injury residual slope ~1/1.4.
+    rating_spread_k: float = 0.73     # scales team off/def deviation from league mean
+    injury_scale: float = 0.71        # scales injury + roster_delta net adjustments
     pos_synergy_lambda: float = 0.35  # convex penalty, points per 100
     q_play_prob: float = 0.50         # Questionable
     p_play_prob: float = 0.85         # Probable

@@ -158,7 +158,7 @@ def _candidates(home: str, away: str, pm_fn, event_id: str, market: str, quotes:
         for side, line in pairs:
             kw = dict(event_id=event_id, market=market, side=side, line=line)
             try:
-                ref = reference_prob(quotes, method=method, **kw)
+                ref = reference_prob(quotes, method=method, consensus=C.CONSENSUS_REF, **kw)
                 pick = best_price(quotes, books=books, **kw)
             except (NoQuoteError, OneWayMarketError):
                 continue

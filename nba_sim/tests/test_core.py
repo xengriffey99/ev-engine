@@ -83,3 +83,14 @@ def test_backtest_metrics_on_synthetic_calibrated_model():
     recs = [{"market": "spread", "p_model": float(pi), "p_market_novig": 0.5, "outcome": int(yi)} for pi, yi in zip(p, y)]
     res = backtest.evaluate(recs)
     assert res["brier_skill_vs_market"] > 0 and res["ece"] < 0.03
+
+
+def test_030_calibration_params():
+    from nba_sim.config import PRIORS
+    from nba_sim.engine import _team_ratings
+    assert PRIORS.hca_points == 1.7
+    t = {"ortg": 125.5, "drtg": 105.5, "roster_delta": 0.0, "pace": 99.6, "rating_prior": "epm"}
+    r = _team_ratings(t, 0.0)
+    assert abs(r["off"] - (115.5 + 0.73 * 10)) < 1e-9 and abs(r["def"] - (115.5 - 0.73 * 10)) < 1e-9
+    r2 = _team_ratings(t, -2.0)  # injury drag scaled by 0.71
+    assert abs((r["net"] - r2["net"]) - 2.0 * 0.71) < 1e-9

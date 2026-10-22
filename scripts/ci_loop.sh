@@ -24,6 +24,7 @@ while (( SECONDS < end )); do
     printf '%s\n' "$out" | sed "s/^/$(date -u +%H:%M:%SZ) /"
     while IFS= read -r line; do
       case "$line" in
+        MISSED*close*|ERROR*close*) echo "::error::$line"; echo "$line" >> /tmp/close_alert ;;
         *"Upgrade trigger"*|*"Quota limits coverage"*|SKIPPED*|MISSED*|ERROR*) echo "::warning::$line" ;;
       esac
     done <<< "$out"

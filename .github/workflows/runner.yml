@@ -52,3 +52,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run runner.yml --repo "$GITHUB_REPOSITORY" --ref main -f minutes=330
+      - name: Missed-close alert
+        if: always()
+        run: |
+          if [ -s /tmp/close_alert ]; then
+            echo "::error::A scheduled close snapshot was missed or errored (CLV for those rows is lost):"
+            cat /tmp/close_alert
+            exit 1   # red run -> GitHub emails the repo owner
+          fi

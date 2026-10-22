@@ -20,8 +20,9 @@ def _team_ratings(t: dict, inj_net: float) -> dict:
     shrunk career projections) is used as-is, so it is not shrunk twice."""
     lg = PRIORS.league_ortg
     reg = (lambda r: r) if t.get("rating_prior") == "epm" else ff.regress_rating
-    off = reg(t["ortg"]) + 0.5 * t["roster_delta"] + 0.5 * inj_net
-    deff = reg(t["drtg"]) - 0.5 * t["roster_delta"] - 0.5 * inj_net
+    k, sc = PRIORS.rating_spread_k, PRIORS.injury_scale
+    off = lg + k * (reg(t["ortg"]) - lg) + 0.5 * sc * (t["roster_delta"] + inj_net)
+    deff = lg + k * (reg(t["drtg"]) - lg) - 0.5 * sc * (t["roster_delta"] + inj_net)
     return {"off": off, "def": deff, "net": off - deff, "pace": pace.regress_pace(t["pace"]), "lg": lg}
 
 

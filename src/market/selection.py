@@ -184,8 +184,15 @@ def reference_prob(
     method: str = C.DEFAULT_DEVIG_METHOD,
     as_of: datetime | None = None,
     max_age: timedelta | None = None,
+    consensus: bool = False,
 ) -> ReferencePrice:
     """No-vig probability of `side` from the best available reference tier.
+
+    consensus=True (sides/totals decision pricing only; approved 2026-10-22): when Pinnacle AND at
+    least one exchange post a fresh two-way pair on the same line, the reference is the equal-weight
+    mean of the Pinnacle de-vig and the mean exchange de-vig (weights are a placeholder until fit
+    out of sample). An exchange price that beats Pinnacle's fair is then information, not edge.
+    CLV grading keeps consensus=False (Pinnacle-only close) so history stays comparable.
 
     Sides/totals: Pinnacle -> exchanges -> retail consensus (section 14).
     Props: retail two-way only; exchanges are not a prop de-vig anchor.
@@ -230,12 +237,21 @@ def reference_prob(
     if not chosen:
         raise NoQuoteError(f"No usable reference tier for {market} {side} {line}")
 
+    if consensus and cls == C.SIDES_TOTALS and tier == "sharp":
+        exch = [p for p in pairs if p.book in C.EXCHANGE_BOOKS]
+        if exch:
+            chosen = chosen + exch
     by_group: dict[str, list[float]] = {}
     for pr in chosen:
         res = devig_decimal([pr.side_quote.price_decimal, pr.other_quote.price_decimal], method)
         by_group.setdefault(C.opinion_group(pr.book), []).append(res.probs[0])
-    group_means = [sum(v) / len(v) for v in by_group.values()]
-    p = sum(group_means) / len(group_means)
+    if consensus and tier == "sharp" and len(by_group) > 1:
+        sharp_p = sum(by_group[C.opinion_group("pinnacle")]) / len(by_group[C.opinion_group("pinnacle")])
+        ex = [x for g, v in by_group.items() if g != C.opinion_group("pinnacle") for x in v]
+        p = 0.5 * sharp_p + 0.5 * (sum(ex) / len(ex))
+    else:
+        group_means = [sum(v) / len(v) for v in by_group.values()]
+        p = sum(group_means) / len(group_means)
 
     if tier == "retail":
         quality = "consensus_retail" if len(by_group) >= 2 else "single_retail"

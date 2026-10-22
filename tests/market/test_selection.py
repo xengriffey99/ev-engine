@@ -217,3 +217,21 @@ def test_worse_quality():
     assert worse_quality("sharp", "single_retail") == "single_retail"
     assert worse_quality("exchange", "sharp") == "exchange"
     assert worse_quality(None, "sharp") == "sharp"
+
+
+def test_consensus_blends_pinnacle_and_exchange_equally():
+    board = [q("pinnacle", "Over", 220.5, -110, market="totals", player=None), q("pinnacle", "Under", 220.5, -110, market="totals", player=None),
+             q("novig", "Over", 220.5, -125, market="totals", player=None), q("novig", "Under", 220.5, +105, market="totals", player=None)]
+    kw = dict(event_id=board[0].event_id, market="totals", side="Over", line=220.5)
+    base = reference_prob(board, **kw)
+    cons = reference_prob(board, consensus=True, **kw)
+    ex = reference_prob([x for x in board if x.book == "novig"], **kw)
+    assert base.p == pytest.approx(0.5)
+    assert cons.p == pytest.approx(0.5 * base.p + 0.5 * ex.p)
+    assert cons.ref_quality == "sharp" and set(cons.books) == {"pinnacle", "novig"}
+
+
+def test_consensus_is_noop_without_exchange_and_never_for_props():
+    board = [q("pinnacle", "Over", 220.5, -110, market="totals", player=None), q("pinnacle", "Under", 220.5, -112, market="totals", player=None)]
+    kw = dict(event_id=board[0].event_id, market="totals", side="Over", line=220.5)
+    assert reference_prob(board, consensus=True, **kw).p == pytest.approx(reference_prob(board, **kw).p)
