@@ -1,0 +1,67 @@
+{
+ "source": "Official NBA Injury Report 10/22/26 12:30 PM ET (unchanged from 11:30 AM), read from the PDF",
+ "statuses": [
+  {
+   "name": "Jarrett Allen",
+   "team": "CLE",
+   "status": "questionable"
+  },
+  {
+   "name": "Khalifa Diop",
+   "team": "CLE",
+   "status": "out"
+  },
+  {
+   "name": "Nae'Qwan Tomlin",
+   "team": "CLE",
+   "status": "out"
+  },
+  {
+   "name": "Dominick Barlow",
+   "team": "PHI",
+   "status": "out"
+  },
+  {
+   "name": "Tacko Fall",
+   "team": "PHI",
+   "status": "out"
+  },
+  {
+   "name": "Ariel Hukporti",
+   "team": "PHI",
+   "status": "out"
+  },
+  {
+   "name": "Dean Wade",
+   "team": "PHI",
+   "status": "questionable"
+  },
+  {
+   "name": "Spencer Jones",
+   "team": "DEN",
+   "status": "questionable"
+  },
+  {
+   "name": "Julian Strawther",
+   "team": "DEN",
+   "status": "out"
+  },
+  {
+   "name": "Otega Oweh",
+   "team": "OKC",
+   "status": "out"
+  },
+  {
+   "name": "Thomas Sorber",
+   "team": "OKC",
+   "status": "out"
+  },
+  {
+   "name": "Nikola Topi\u0107",
+   "team": "OKC",
+   "status": "out"
+  }
+ ],
+ "two_way": [],
+ "two_way_note": "two-way contract status NOT sourced for 10/22 (ESTIMATED: none flagged)"
+}
