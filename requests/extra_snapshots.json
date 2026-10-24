@@ -1,0 +1,26 @@
+{
+  "requests": [
+    {
+      "id": "2026-10-24-was-chi-reb",
+      "date_et": "2026-10-24",
+      "home_team": "Chicago Bulls",
+      "away_team": "Washington Wizards",
+      "markets": ["player_rebounds"],
+      "decision_at_et": "2026-10-24T12:00:00-04:00",
+      "decision_deadline_et": "2026-10-24T19:30:00-04:00",
+      "approved": "Chris 2026-10-24 11:15 ET (about 2 credits: decision + T-5 close)",
+      "model_version": "sidequest-reb-0",
+      "projection_as_of_et": "2026-10-24T11:10:00-04:00",
+      "opinions": [
+        {"player": "Josh Giddey", "market": "player_rebounds", "line": 6.5, "p_over_model": 0.615,
+         "notes": "NB sim, 0.245 reb/min x 31 min (ESTIMATE; preseason 22-24 min), env 1.015, var 1.3x mean"},
+        {"player": "Matas Buzelis", "market": "player_rebounds", "line": 5.5, "p_over_model": 0.514,
+         "notes": "NB sim, 0.190 reb/min (ESTIMATE) x 30.5 min"},
+        {"player": "Jalen Smith", "market": "player_rebounds", "line": 8.5, "p_over_model": 0.384,
+         "notes": "NB sim, 0.320 reb/min (2025-26: 6.7 in 20.7 min) x 24 min; Claxton out"},
+        {"player": "Kyshawn George", "market": "player_rebounds", "line": 4.5, "p_over_model": 0.347,
+         "notes": "NB sim, 0.155 reb/min x 22/27 min mix on Dybantsa status (corrected from stale 29.5-min role)"}
+      ]
+    }
+  ]
+}

@@ -22,6 +22,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from . import config as C
+from . import extra
 from .clv import compute_clv
 from .model_adapter import build_baseline_opinions, build_opinions, from_nba_sim_payload, match_events
 from .odds_api import BudgetExceeded, OddsApiClient, OddsApiError, estimate_cost
@@ -101,8 +102,7 @@ def run_due(store: MarketStore, client: OddsApiClient, now: datetime | None = No
 def close_out_opinions(store: MarketStore, log: OpinionLog) -> list[str]:
     messages: list[str] = []
     for row in log.open_rows():
-        kind = "sides_close" if C.market_class(row["market"]) == C.SIDES_TOTALS else "props_close"
-        job = store.close_job_for(row["game_id"], kind)
+        job = store.close_job_for_market(row["game_id"], close_kinds(row["market"]), row["market"])
         if job is None or job.status in (MISSED, SKIPPED_BUDGET, ERROR):
             log.mark_close_missing(row["opinion_id"])
             messages.append(f"close_missing {row['opinion_id']} ({job.status if job else 'no close job'})")
@@ -278,7 +278,7 @@ def slate_day(now: datetime) -> date:
 
 
 def tick(store: MarketStore, client: OddsApiClient, log: OpinionLog, now: datetime | None = None,
-         payload_dir: Path = Path("data/payloads")) -> list[str]:
+         payload_dir: Path = Path("data/payloads"), extra_path: Path = extra.DEFAULT_PATH) -> list[str]:
     """One pass of everything: plan once per day, take due snapshots, log, close out."""
     now = now or now_utc()
     day = slate_day(now)
@@ -288,8 +288,11 @@ def tick(store: MarketStore, client: OddsApiClient, log: OpinionLog, now: dateti
         store.mark_planned(day.isoformat())
         messages.append(f"planned {day}: {n} job(s), credits remaining {store.remaining}")
         messages += [f"WARNING: {w}" for w in warnings]
+    if now.astimezone(ET).date() == day:
+        messages += extra.schedule_extra(store, client, day, now, extra_path)
     messages += run_due(store, client, now)
     messages += record_baseline_opinions(store, log, day)
+    messages += extra.record_extra_opinions(store, log, day, extra_path)
     payload = payload_dir / f"payload_{day.isoformat()}.json"
     if payload.exists():
         projections = from_nba_sim_payload(json.loads(payload.read_text()))
@@ -344,12 +347,17 @@ def grade_results(store: MarketStore, log: OpinionLog, now: datetime, fetch=None
     return [f"graded {len(graded)} row(s)"] if graded else []
 
 
+def close_kinds(market: str) -> tuple[str, ...]:
+    if C.market_class(market) == C.SIDES_TOTALS:
+        return ("sides_close",)
+    return ("props_close", extra.CLOSE)
+
+
 def close_plan_from(store: MarketStore):
     """Opinion-log gate: only markets with a scheduled close snapshot can be logged."""
     def plan_fn(game_id: str, market: str) -> bool:
-        kind = "sides_close" if C.market_class(market) == C.SIDES_TOTALS else "props_close"
-        job = store.close_job_for(game_id, kind)
-        return job is not None and market in job.markets and job.status in (PENDING, DONE)
+        job = store.close_job_for_market(game_id, close_kinds(market), market)
+        return job is not None and job.status in (PENDING, DONE)
     return plan_fn
 
 

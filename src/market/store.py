@@ -183,6 +183,14 @@ class MarketStore:
                 return j
         return None
 
+    def close_job_for_market(self, event_id: str, kinds: tuple[str, ...], market: str) -> JobRow | None:
+        """The close job that actually covers this market (a game can have a points close and an
+        approved extra rebounds close; the first job of the kind is not necessarily the right one)."""
+        for j in self.jobs():
+            if j.kind in kinds and event_id in j.event_ids and market in j.markets:
+                return j
+        return None
+
     def is_planned(self, date_et: str) -> bool:
         return self.conn.execute("SELECT 1 FROM meta WHERE key = ?", (f"planned:{date_et}",)).fetchone() is not None
 
