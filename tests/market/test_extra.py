@@ -116,6 +116,26 @@ def test_projection_newer_than_snapshot_is_not_priced(world):
     assert log.rows() == []
 
 
+def test_alt_line_used_when_request_line_moved(world):
+    clock, api, store, client, log, path = world
+    req = json.loads(path.read_text())
+    giddey = req["requests"][0]["opinions"][0]
+    giddey["line"], giddey["p_over_model"] = 7.5, 0.48          # line the board no longer shows
+    giddey["alt_lines"] = [{"line": 8.5, "p_over_model": 0.35},  # not on the board either
+                           {"line": 6.5, "p_over_model": 0.615}]  # the posted line
+    path.write_text(json.dumps(req))
+    clock["now"] = at(11, 20)
+    extra.schedule_extra(store, client, DAY, clock["now"], path)
+    clock["now"] = at(12, 1)
+    run_due(store, client, clock["now"])
+    msgs = extra.record_extra_opinions(store, log, DAY, path)
+    rows = [r for r in log.rows() if r["player"] == "Josh Giddey"]
+    assert len(rows) == 1 and rows[0]["line"] == 6.5 and abs(rows[0]["p_model"] - 0.615) < 1e-9
+    assert "alt line (request line 7.5)" in rows[0]["notes"]
+    assert any("Josh Giddey" in m and " 6.5 " in m for m in msgs)
+    assert extra.record_extra_opinions(store, log, DAY, path) == []  # one row per player-market
+
+
 def test_request_for_missing_game_warns(world, tmp_path):
     clock, api, store, client, log, path = world
     req = json.loads(path.read_text())

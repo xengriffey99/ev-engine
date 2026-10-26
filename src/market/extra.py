@@ -25,9 +25,14 @@ Request format:
     "model_version": "sidequest-reb-0",
     "projection_as_of_et": "2026-10-24T11:10:00-04:00",
     "opinions": [{"player": "Josh Giddey", "market": "player_rebounds", "line": 6.5,
-                  "p_over_model": 0.615, "notes": "..."}]
+                  "p_over_model": 0.615, "notes": "...",
+                  "alt_lines": [{"line": 5.5, "p_over_model": 0.75}]}]
   }]
 }
+
+`alt_lines` (optional) carries the same projection priced at nearby lines, for when the posted
+line moves between the projection and the decision snapshot. The request line is tried first;
+one row per player-market is logged, at the first line with a two-way reference (no ladders).
 """
 
 from __future__ import annotations
@@ -141,38 +146,51 @@ def record_extra_opinions(store: MarketStore, log: OpinionLog, day: date,
         if snap_time is None or snap_time < as_of:
             continue  # as-of rule: price only against a snapshot taken after the projection
         for spec in req["opinions"]:
-            key = (event_id, spec["market"], req["model_version"], spec["player"], spec["line"])
+            # The request line first, then any alt_lines (same projection, priced at a moved line).
+            # Exactly one row per player-market is logged: the first line with a two-way reference.
+            options = [(spec["line"], spec["p_over_model"])] + [
+                (a["line"], a["p_over_model"]) for a in spec.get("alt_lines", [])]
+            keys = {(event_id, spec["market"], req["model_version"], spec["player"], ln) for ln, _ in options}
             skip_key = f"{_meta_key(req['id'])}:skip:{spec['player']}:{spec['market']}:{spec['line']}"
-            if key in existing or _has_meta(store, skip_key):
+            if keys & existing or _has_meta(store, skip_key):
                 continue
-            cands = {}
-            for side, pm in (("Over", spec["p_over_model"]), ("Under", 1 - spec["p_over_model"])):
-                try:
-                    ref = reference_prob(quotes, event_id=event_id, market=spec["market"], side=side,
-                                         line=spec["line"], player=spec["player"])
-                    pick = best_price(quotes, event_id=event_id, market=spec["market"], side=side,
-                                      line=spec["line"], player=spec["player"], books=C.BETTABLE_BOOKS)
-                except (NoQuoteError, OneWayMarketError):
-                    continue
-                w = C.BLEND_W[C.PROPS]
-                cands[side] = ((w * pm + (1 - w) * ref.p) * effective_price(pick) - 1, pm, ref, pick)
-            if not cands:
-                messages.append(f"extra {req['id']}: {spec['player']} {spec['market']} {spec['line']}: "
+            chosen = None
+            for line, p_over in options:
+                cands = {}
+                for side, pm in (("Over", p_over), ("Under", 1 - p_over)):
+                    try:
+                        ref = reference_prob(quotes, event_id=event_id, market=spec["market"], side=side,
+                                             line=line, player=spec["player"])
+                        pick = best_price(quotes, event_id=event_id, market=spec["market"], side=side,
+                                          line=line, player=spec["player"], books=C.BETTABLE_BOOKS)
+                    except (NoQuoteError, OneWayMarketError):
+                        continue
+                    w = C.BLEND_W[C.PROPS]
+                    cands[side] = ((w * pm + (1 - w) * ref.p) * effective_price(pick) - 1, pm, ref, pick)
+                if cands:
+                    chosen = (line, cands)
+                    break
+            if chosen is None:
+                tried = ",".join(f"{ln:g}" for ln, _ in options)
+                messages.append(f"extra {req['id']}: {spec['player']} {spec['market']} (lines {tried}): "
                                 "no two-way reference with a bettable price at decision; not logged")
                 _set_meta(store, skip_key, "no two-way reference")
                 continue
+            line, cands = chosen
             side = max(cands, key=lambda s: cands[s][0])
             _, pm, ref, pick = cands[side]
+            alt_note = f"; alt line (request line {spec['line']:g})" if line != spec["line"] else ""
             fee = fee_note(pick)
             op = Opinion(
-                game_id=event_id, market=spec["market"], side=side, line=spec["line"], book=pick.book,
+                game_id=event_id, market=spec["market"], side=side, line=line, book=pick.book,
                 price_american=decimal_to_american(effective_price(pick)),
                 p_model=min(max(pm, 1e-4), 1 - 1e-4), p_market_novig=ref.p,
                 model_version=req["model_version"], ref_quality=ref.ref_quality,
                 player=spec["player"], stat=C.stat_for_market(spec["market"]), pass_reason="model_hold",
                 timestamp=snap_time,
-                notes=(f"{spec.get('notes', '')}; extra request {req['id']}; ref_books={','.join(ref.books)} "
-                       f"(retail reference); bet_state={C.BET_STATE}" + (f"; {fee}" if fee else "")),
+                notes=(f"{spec.get('notes', '')}; extra request {req['id']}{alt_note}; "
+                       f"ref_books={','.join(ref.books)} (retail reference); bet_state={C.BET_STATE}"
+                       + (f"; {fee}" if fee else "")),
             )
             try:
                 oid = log.record(op)
@@ -180,9 +198,9 @@ def record_extra_opinions(store: MarketStore, log: OpinionLog, day: date,
                 messages.append(f"rejected extra {spec['player']} {spec['market']}: {err}")
                 _set_meta(store, skip_key, f"rejected: {err}")
                 continue
-            existing.add(key)
+            existing.add((event_id, spec["market"], req["model_version"], spec["player"], line))
             row = next(r for r in log.rows() if r["opinion_id"] == oid)
             messages.append(f"logged [{req['model_version']}] {spec['market']} {spec['player']} {side} "
-                            f"{spec['line']:g} {row['price_american']:+.0f} @{pick.book}: "
+                            f"{line:g} {row['price_american']:+.0f} @{pick.book}: "
                             f"EV {row['ev_pct'] * 100:+.2f}% -> pass (model_hold)")
     return messages

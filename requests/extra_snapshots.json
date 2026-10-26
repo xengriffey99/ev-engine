@@ -5,22 +5,161 @@
       "date_et": "2026-10-24",
       "home_team": "Chicago Bulls",
       "away_team": "Washington Wizards",
-      "markets": ["player_rebounds"],
+      "markets": [
+        "player_rebounds"
+      ],
       "decision_at_et": "2026-10-24T12:00:00-04:00",
       "decision_deadline_et": "2026-10-24T19:30:00-04:00",
       "approved": "Chris 2026-10-24 11:15 ET (about 2 credits: decision + T-5 close)",
       "model_version": "sidequest-reb-0",
       "projection_as_of_et": "2026-10-24T11:10:00-04:00",
       "opinions": [
-        {"player": "Josh Giddey", "market": "player_rebounds", "line": 6.5, "p_over_model": 0.615,
-         "notes": "NB sim, 0.245 reb/min x 31 min (ESTIMATE; preseason 22-24 min), env 1.015, var 1.3x mean"},
-        {"player": "Matas Buzelis", "market": "player_rebounds", "line": 5.5, "p_over_model": 0.514,
-         "notes": "NB sim, 0.190 reb/min (ESTIMATE) x 30.5 min"},
-        {"player": "Jalen Smith", "market": "player_rebounds", "line": 8.5, "p_over_model": 0.384,
-         "notes": "NB sim, 0.320 reb/min (2025-26: 6.7 in 20.7 min) x 24 min; Claxton out"},
-        {"player": "Kyshawn George", "market": "player_rebounds", "line": 4.5, "p_over_model": 0.347,
-         "notes": "NB sim, 0.155 reb/min x 22/27 min mix on Dybantsa status (corrected from stale 29.5-min role)"}
+        {
+          "player": "Josh Giddey",
+          "market": "player_rebounds",
+          "line": 6.5,
+          "p_over_model": 0.615,
+          "notes": "NB sim, 0.245 reb/min x 31 min (ESTIMATE; preseason 22-24 min), env 1.015, var 1.3x mean"
+        },
+        {
+          "player": "Matas Buzelis",
+          "market": "player_rebounds",
+          "line": 5.5,
+          "p_over_model": 0.514,
+          "notes": "NB sim, 0.190 reb/min (ESTIMATE) x 30.5 min"
+        },
+        {
+          "player": "Jalen Smith",
+          "market": "player_rebounds",
+          "line": 8.5,
+          "p_over_model": 0.384,
+          "notes": "NB sim, 0.320 reb/min (2025-26: 6.7 in 20.7 min) x 24 min; Claxton out"
+        },
+        {
+          "player": "Kyshawn George",
+          "market": "player_rebounds",
+          "line": 4.5,
+          "p_over_model": 0.347,
+          "notes": "NB sim, 0.155 reb/min x 22/27 min mix on Dybantsa status (corrected from stale 29.5-min role)"
+        }
       ]
+    },
+    {
+      "id": "2026-10-26-atl-hou-ast-reb",
+      "home_team": "Houston Rockets",
+      "away_team": "Atlanta Hawks",
+      "markets": [
+        "player_assists",
+        "player_rebounds"
+      ],
+      "opinions": [
+        {
+          "player": "Alperen Sengun",
+          "market": "player_assists",
+          "line": 4.5,
+          "p_over_model": 0.668,
+          "notes": "NB sim, 2025-26 prior 0.1862/min sourced (LoB), post 0.1873, proj min 32.0, mean 5.98; outsized: 4.5 line looks low vs 6.2 APG prior; verify",
+          "alt_lines": [
+            {
+              "line": 3.5,
+              "p_over_model": 0.799
+            },
+            {
+              "line": 5.5,
+              "p_over_model": 0.527
+            }
+          ]
+        },
+        {
+          "player": "Alperen Sengun",
+          "market": "player_rebounds",
+          "line": 9.5,
+          "p_over_model": 0.367,
+          "notes": "NB sim, 2025-26 prior 0.2673/min sourced (LoB), post 0.2684, proj min 32.0, mean 8.58; Adams out",
+          "alt_lines": [
+            {
+              "line": 8.5,
+              "p_over_model": 0.475
+            },
+            {
+              "line": 10.5,
+              "p_over_model": 0.272
+            }
+          ]
+        }
+      ],
+      "date_et": "2026-10-26",
+      "decision_at_et": "2026-10-26T13:20:00-04:00",
+      "decision_deadline_et": "2026-10-26T18:30:00-04:00",
+      "approved": "Chris 2026-10-26 08:01 ET ('run it', two-way pull on targets)",
+      "model_version": "sidequest-nb-1",
+      "projection_as_of_et": "2026-10-26T08:19:25-04:00"
+    },
+    {
+      "id": "2026-10-26-was-cha-ast",
+      "home_team": "Charlotte Hornets",
+      "away_team": "Washington Wizards",
+      "markets": [
+        "player_assists"
+      ],
+      "opinions": [
+        {
+          "player": "Brandon Miller",
+          "market": "player_assists",
+          "line": 3.5,
+          "p_over_model": 0.364,
+          "notes": "NB sim, 2025-26 prior 0.1089/min sourced (LoB), post 0.0983, proj min 31.3, mean 3.06; White, Knueppel out",
+          "alt_lines": [
+            {
+              "line": 2.5,
+              "p_over_model": 0.557
+            },
+            {
+              "line": 4.5,
+              "p_over_model": 0.217
+            }
+          ]
+        }
+      ],
+      "date_et": "2026-10-26",
+      "decision_at_et": "2026-10-26T13:20:00-04:00",
+      "decision_deadline_et": "2026-10-26T18:30:00-04:00",
+      "approved": "Chris 2026-10-26 08:01 ET ('run it', two-way pull on targets)",
+      "model_version": "sidequest-nb-1",
+      "projection_as_of_et": "2026-10-26T08:19:25-04:00"
+    },
+    {
+      "id": "2026-10-26-mem-uta-reb",
+      "home_team": "Utah Jazz",
+      "away_team": "Memphis Grizzlies",
+      "markets": [
+        "player_rebounds"
+      ],
+      "opinions": [
+        {
+          "player": "Jaylen Wells",
+          "market": "player_rebounds",
+          "line": 2.5,
+          "p_over_model": 0.616,
+          "notes": "NB sim, 2025-26 prior 0.1212/min sourced (LoB), post 0.1269, proj min 26.3, mean 3.39; MEM 2026-27 page missing 10/25 game; Coward GTD",
+          "alt_lines": [
+            {
+              "line": 1.5,
+              "p_over_model": 0.805
+            },
+            {
+              "line": 3.5,
+              "p_over_model": 0.426
+            }
+          ]
+        }
+      ],
+      "date_et": "2026-10-26",
+      "decision_at_et": "2026-10-26T13:20:00-04:00",
+      "decision_deadline_et": "2026-10-26T18:30:00-04:00",
+      "approved": "Chris 2026-10-26 08:01 ET ('run it', two-way pull on targets)",
+      "model_version": "sidequest-nb-1",
+      "projection_as_of_et": "2026-10-26T08:19:25-04:00"
     }
   ]
 }
