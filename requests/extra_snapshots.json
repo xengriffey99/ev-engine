@@ -160,6 +160,104 @@
       "approved": "Chris 2026-10-26 08:01 ET ('run it', two-way pull on targets)",
       "model_version": "sidequest-nb-1",
       "projection_as_of_et": "2026-10-26T08:19:25-04:00"
+    },
+    {
+      "id": "2026-10-27-bkn-bos-reb",
+      "date_et": "2026-10-27",
+      "home_team": "Boston Celtics",
+      "away_team": "Brooklyn Nets",
+      "markets": [
+        "player_rebounds"
+      ],
+      "decision_at_et": "2026-10-27T13:20:00-04:00",
+      "decision_deadline_et": "2026-10-27T19:00:00-04:00",
+      "approved": "Chris 2026-10-27 08:05 ET",
+      "model_version": "sidequest-nb-1",
+      "projection_as_of_et": "2026-10-27T07:55:00-04:00",
+      "opinions": [
+        {
+          "player": "Day'Ron Sharpe",
+          "market": "player_rebounds",
+          "line": 8.5,
+          "p_over_model": 0.281,
+          "alt_lines": [
+            {
+              "line": 7.5,
+              "p_over_model": 0.385
+            },
+            {
+              "line": 9.5,
+              "p_over_model": 0.197
+            }
+          ],
+          "notes": "Tier-2 -2 (minutes) listed separately"
+        },
+        {
+          "player": "Michael Porter Jr.",
+          "market": "player_rebounds",
+          "line": 6.5,
+          "p_over_model": 0.371,
+          "alt_lines": [
+            {
+              "line": 5.5,
+              "p_over_model": 0.503
+            },
+            {
+              "line": 7.5,
+              "p_over_model": 0.259
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-10-27-por-lal-ast",
+      "date_et": "2026-10-27",
+      "home_team": "Los Angeles Lakers",
+      "away_team": "Portland Trail Blazers",
+      "markets": [
+        "player_assists"
+      ],
+      "decision_at_et": "2026-10-27T17:00:00-04:00",
+      "decision_deadline_et": "2026-10-27T22:30:00-04:00",
+      "approved": "Chris 2026-10-27 08:05 ET",
+      "model_version": "sidequest-nb-1",
+      "projection_as_of_et": "2026-10-27T07:55:00-04:00",
+      "opinions": [
+        {
+          "player": "Ja Morant",
+          "market": "player_assists",
+          "line": 5.5,
+          "p_over_model": 0.703,
+          "alt_lines": [
+            {
+              "line": 4.5,
+              "p_over_model": 0.813
+            },
+            {
+              "line": 6.5,
+              "p_over_model": 0.58
+            }
+          ]
+        },
+        {
+          "player": "Deni Avdija",
+          "market": "player_assists",
+          "line": 4.5,
+          "p_over_model": 0.705,
+          "alt_lines": [
+            {
+              "line": 3.5,
+              "p_over_model": 0.826
+            },
+            {
+              "line": 5.5,
+              "p_over_model": 0.568
+            }
+          ],
+          "notes": "Tier-2 -2 (role change) listed separately"
+        }
+      ]
     }
   ]
 }
