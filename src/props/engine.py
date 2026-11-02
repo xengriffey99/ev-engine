@@ -10,8 +10,11 @@ One joint simulation per game, shared by every player in it:
    questionable 0.50, probable 0.85); one draw per simulated game.
 3. Minutes engine: the healthy rotation takes the top 240 projected minutes in MPG order. Minutes
    vacated by absences go BETA to the remaining rotation (pro rata, capped) and the rest down the
-   depth chart. Blowouts (|M| beyond a threshold) move starter minutes to the bench. Player-level
-   minutes noise, renormalised to 240 per team (+25 per overtime period).
+   depth chart. Blowouts (|M| beyond a threshold) move starter minutes to the bench, CENTRED on an
+   average game: healthy MPG is measured over all games, so it already contains the typical
+   blowout loss; the sim only applies tonight's difference from that average (fix 2026-10-30,
+   double count found in the props side quest). Player-level minutes noise, renormalised to 240
+   per team (+25 per overtime period; the 240 cap means OT is not double counted here).
 4. Rate engine with usage cascade: per-minute scoring weight r_i = pts/100 x poss/48 / 48 (career
    projections, already shrunk). Expected points lambda_i = team points x r_i m_i / sum_j r_j m_j,
    so an absent scorer's share flows to the players who take his minutes and shots.
@@ -74,11 +77,26 @@ class EngineParams:
     blowout_start: float = 12.0  # |final margin| where starters begin to sit late
     blowout_slope: float = 0.5  # starter minutes lost per point beyond the start
     blowout_max: float = 8.0
+    blowout_ref_spread_sd: float = 7.5  # league closing spreads ~N(0, 7.5), mean |spread| ~6 (ESTIMATE)
+    blowout_ref_margin_sd: float = 12.0  # final margin SD around the spread in the reference game
     minutes_noise_cv: float = 0.10
     ot_rate: float = 0.06
     k2: float = 40.0  # NB dispersion of made twos (league-typical SD/mean, not fit)
     k3: float = 20.0  # made threes
     kft: float = 15.0  # made free throws
+
+
+def expected_blowout_loss(p: EngineParams) -> float:
+    """Starter minutes an AVERAGE game already removes (about 1.44 with the defaults).
+
+    Healthy MPG comes from all games played, so it already nets out the typical blowout; the sim
+    must remove only tonight's difference from it, or every starter is cut twice."""
+    sd = float(np.hypot(p.blowout_ref_spread_sd, p.blowout_ref_margin_sd))
+    x = np.linspace(-8 * sd, 8 * sd, 20001)
+    w = np.exp(-0.5 * (x / sd) ** 2)
+    w /= w.sum()
+    cut = np.clip(p.blowout_slope * (np.abs(x) - p.blowout_start), 0.0, p.blowout_max)
+    return float((cut * w).sum())
 
 
 def healthy_allocation(mpg: np.ndarray, team_minutes: float) -> np.ndarray:
@@ -149,12 +167,15 @@ def simulate_team(players: Sequence[PlayerIn], team_pts: np.ndarray, team_margin
     order = np.argsort(-base, axis=1)
     starters = np.zeros_like(base, dtype=bool)
     np.put_along_axis(starters, order[:, :5], True, axis=1)
+    # Centred: a close game gives starters back the average loss; a rout takes more than average.
     loss = np.clip(p.blowout_slope * (np.abs(team_margin) - p.blowout_start), 0.0, p.blowout_max)
-    take = np.minimum(base, loss[:, None]) * starters
+    loss = loss - expected_blowout_loss(p)
+    take = np.where(loss[:, None] >= 0, np.minimum(base, loss[:, None]), loss[:, None]) * starters
     bench_w = np.where(active & ~starters, mpg[None, :], 0.0)
     bench_w = bench_w / np.maximum(bench_w.sum(axis=1, keepdims=True), 1e-9)
-    m = base - take + take.sum(axis=1, keepdims=True) * bench_w
-    # Minutes noise, then renormalise to 240 (+25 per OT period).
+    m = np.maximum(base - take + take.sum(axis=1, keepdims=True) * bench_w, 0.0)
+    # Minutes noise, then renormalise to 240 (+25 per OT period). Not centred: the team total is a hard
+    # 240 in regulation, and the healthy allocation already caps MPG at 240, so OT is not double counted here.
     noise = rng.lognormal(-0.5 * p.minutes_noise_cv ** 2, p.minutes_noise_cv, m.shape)
     m = m * noise * active
     total = p.team_minutes + 25.0 * ot

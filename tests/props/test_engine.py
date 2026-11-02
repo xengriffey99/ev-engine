@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 
-from props.engine import (EngineParams, MarketEnv, PlayerIn, allocate_minutes, healthy_allocation,
+from props.engine import (EngineParams, MarketEnv, PlayerIn, allocate_minutes, expected_blowout_loss,
+                          healthy_allocation,
                           prob_over, restriction, simulate_game, summarize)
 
 
@@ -80,3 +81,16 @@ def test_2026_27_restrictions():
     assert restriction("player_points", "Over", 30.0, True) is not None  # two-way player
     assert restriction("player_points", "Under", 30.0, False, is_main_line=False) is not None
     assert restriction("player_turnovers", "Over", 30.0, False) is not None
+
+
+def test_blowout_cut_is_centred_on_an_average_game():
+    """Regression for the 2026-10-30 double count: over the reference spread mix, starters keep their healthy MPG."""
+    assert 1.2 < expected_blowout_loss(P) < 1.7
+    sd = float(np.hypot(P.blowout_ref_spread_sd, P.blowout_ref_margin_sd))
+    avg = simulate_game(MarketEnv("H", "A", 0.0, 228.0, sd_margin=sd), roster("H"), roster("A"), EngineParams(n_sims=40000))
+    mpg = np.array([pl.mpg for pl in roster("H")], dtype=float)
+    healthy = healthy_allocation(mpg, 240)
+    star = avg["players"]["H-Star"]["minutes"].mean()
+    assert star == pytest.approx(healthy[0], abs=0.6)
+    close = simulate_game(MarketEnv("H", "A", 0.0, 228.0, sd_margin=1.0), roster("H"), roster("A"), P)
+    assert close["players"]["H-Star"]["minutes"].mean() > healthy[0]  # a coin-flip game gives the average cut back
