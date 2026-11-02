@@ -258,6 +258,307 @@
           "notes": "Tier-2 -2 (role change) listed separately"
         }
       ]
+    },
+    {
+      "id": "2026-11-02-bkn-nyk-reb",
+      "date_et": "2026-11-02",
+      "home_team": "New York Knicks",
+      "away_team": "Brooklyn Nets",
+      "markets": [
+        "player_rebounds"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-nb-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Nolan Traore",
+          "market": "player_rebounds",
+          "line": 2.5,
+          "p_over_model": 0.289,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; CARD #2 Under 2.5 REB (DK -155 at 14:19; pass worse than -156). 25 min (RotoWire), 5-min 10/24 cameo dropped. Same position as Bridges.",
+          "alt_lines": [
+            {
+              "line": 1.5,
+              "p_over_model": 0.518
+            },
+            {
+              "line": 3.5,
+              "p_over_model": 0.145
+            }
+          ]
+        },
+        {
+          "player": "Mikal Bridges",
+          "market": "player_rebounds",
+          "line": 3.5,
+          "p_over_model": 0.314,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; CARD #3 Under 3.5 REB (DK -156 at 14:19; gate -156). Matched-only 71.5% (6 games). Same position as Traore.",
+          "alt_lines": [
+            {
+              "line": 2.5,
+              "p_over_model": 0.503
+            },
+            {
+              "line": 4.5,
+              "p_over_model": 0.18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-tor-lac-reb",
+      "date_et": "2026-11-02",
+      "home_team": "Los Angeles Clippers",
+      "away_team": "Toronto Raptors",
+      "markets": [
+        "player_rebounds"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-nb-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Isaiah Jackson",
+          "market": "player_rebounds",
+          "line": 7.5,
+          "p_over_model": 0.285,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; CARD #1 Under 7.5 REB (DK -129 at 14:19; gate -161). Layer minutes 20.9; stress-fragile at +3 min; D. Jones Q priced 50/50 (ESTIMATE).",
+          "alt_lines": [
+            {
+              "line": 6.5,
+              "p_over_model": 0.402
+            },
+            {
+              "line": 8.5,
+              "p_over_model": 0.194
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-det-cha-reb-ast",
+      "date_et": "2026-11-02",
+      "home_team": "Charlotte Hornets",
+      "away_team": "Detroit Pistons",
+      "markets": [
+        "player_rebounds",
+        "player_assists"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-screen-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Sion James",
+          "market": "player_rebounds",
+          "line": 2.5,
+          "p_over_model": 0.638,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: minutes (Coby White debut; last-3 22.7 min -> 59.2%). Over 2.5.",
+          "alt_lines": [
+            {
+              "line": 1.5,
+              "p_over_model": 0.819
+            },
+            {
+              "line": 3.5,
+              "p_over_model": 0.447
+            }
+          ]
+        },
+        {
+          "player": "Ausar Thompson",
+          "market": "player_assists",
+          "line": 4.5,
+          "p_over_model": 0.3,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: matched-only 44.6% (3 games). Under 4.5.",
+          "alt_lines": [
+            {
+              "line": 3.5,
+              "p_over_model": 0.462
+            },
+            {
+              "line": 5.5,
+              "p_over_model": 0.18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-sac-dal-ast",
+      "date_et": "2026-11-02",
+      "home_team": "Dallas Mavericks",
+      "away_team": "Sacramento Kings",
+      "markets": [
+        "player_assists"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-screen-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Cooper Flagg",
+          "market": "player_assists",
+          "line": 6.5,
+          "p_over_model": 0.179,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit NOT PROMOTED: 26-pt gap on 0 matched games. Under 6.5. Irving doubtful priced 75% out (ESTIMATE).",
+          "alt_lines": [
+            {
+              "line": 5.5,
+              "p_over_model": 0.284
+            },
+            {
+              "line": 7.5,
+              "p_over_model": 0.106
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-atl-ind-reb",
+      "date_et": "2026-11-02",
+      "home_team": "Indiana Pacers",
+      "away_team": "Atlanta Hawks",
+      "markets": [
+        "player_rebounds"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-screen-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Onyeka Okongwu",
+          "market": "player_rebounds",
+          "line": 7.5,
+          "p_over_model": 0.389,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: P at RotoWire 30 min 53.9%. Under 7.5 (DK line moved from 8.5). J. Johnson Q priced 50/50 (ESTIMATE).",
+          "alt_lines": [
+            {
+              "line": 6.5,
+              "p_over_model": 0.514
+            },
+            {
+              "line": 8.5,
+              "p_over_model": 0.281
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-was-orl-reb",
+      "date_et": "2026-11-02",
+      "home_team": "Orlando Magic",
+      "away_team": "Washington Wizards",
+      "markets": [
+        "player_rebounds"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-screen-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "Desmond Bane",
+          "market": "player_rebounds",
+          "line": 4.5,
+          "p_over_model": 0.379,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: minutes (last-3 36.7 -> 56.5%). Under 4.5.",
+          "alt_lines": [
+            {
+              "line": 3.5,
+              "p_over_model": 0.545
+            },
+            {
+              "line": 5.5,
+              "p_over_model": 0.242
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-11-02-mil-min-reb-ast",
+      "date_et": "2026-11-02",
+      "home_team": "Minnesota Timberwolves",
+      "away_team": "Milwaukee Bucks",
+      "markets": [
+        "player_rebounds",
+        "player_assists"
+      ],
+      "decision_at_et": "2026-11-02T18:30:00-05:00",
+      "decision_deadline_et": "2026-11-02T21:30:00-05:00",
+      "approved": "Chris 2026-11-02 18:14 ET ('log'; about 2 credits per market: decision + close)",
+      "model_version": "sidequest-screen-1.2",
+      "projection_as_of_et": "2026-11-02T14:20:00-05:00",
+      "opinions": [
+        {
+          "player": "LaMelo Ball",
+          "market": "player_assists",
+          "line": 7.5,
+          "p_over_model": 0.327,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: Ball questionable (wrist) + matched-only 54.8%. Under 7.5. Ball's own status priced 50/50 (ESTIMATE) - an out Ball would be no game.",
+          "alt_lines": [
+            {
+              "line": 6.5,
+              "p_over_model": 0.445
+            },
+            {
+              "line": 8.5,
+              "p_over_model": 0.228
+            }
+          ]
+        },
+        {
+          "player": "Jaden McDaniels",
+          "market": "player_rebounds",
+          "line": 5.5,
+          "p_over_model": 0.35,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit REMOVED from card: Ball-out lift was a weighting artifact (observed-only P 46%). Under 5.5.",
+          "alt_lines": [
+            {
+              "line": 4.5,
+              "p_over_model": 0.497
+            },
+            {
+              "line": 6.5,
+              "p_over_model": 0.231
+            }
+          ]
+        },
+        {
+          "player": "Jaime Jaquez Jr.",
+          "market": "player_rebounds",
+          "line": 4.5,
+          "p_over_model": 0.62,
+          "notes": "sidequest v1.2 screen v1.1 + availability layer v1.2; screen lean, audit FAIL: EV -1.5% at -155. Over 4.5.",
+          "alt_lines": [
+            {
+              "line": 3.5,
+              "p_over_model": 0.762
+            },
+            {
+              "line": 5.5,
+              "p_over_model": 0.477
+            }
+          ]
+        }
+      ]
     }
   ]
 }
