@@ -170,8 +170,9 @@ def direction_block_md(title: str, pool_sides: Sequence[str], *, selected_sides:
         rows.append(("Pool share, game-clustered", f"{_pct(p)} +/- {100 * se:.1f} pts", "reference"))
     if selected_sides is not None:
         r = under_share_test(selected_sides, null_share=pool.share)
+        pv = "n/a (n too small)" if r.p_value != r.p_value else f"{r.p_value:.3g}"
         rows.append(("Selected Under share vs pool null",
-                     f"{r.k_under}/{r.n} = {_pct(r.share)} (null {_pct(r.null)}, p = {r.p_value:.3g})", r.verdict))
+                     f"{r.k_under}/{r.n} = {_pct(r.share)} (null {_pct(r.null)}, p = {pv})", r.verdict))
     if baseline is not None:
         b = baseline_gap(*baseline)
         rows.append(("Model vs always-Under (paired)", f"diff {b['diff']:+d} wins on {baseline[1]} rows, z = {b['z']:.2f}",

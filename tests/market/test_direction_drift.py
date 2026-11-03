@@ -135,6 +135,11 @@ def test_direction_block_flags_saturated_card():
     assert "SATURATED" in dd.direction_block_md("card", sides(60, 40), selected_sides=sides(17, 0))
 
 
+def test_direction_block_low_n_selection_never_prints_nan():
+    md = dd.direction_block_md("card", sides(60, 40), selected_sides=sides(3, 0))
+    assert "LOW_N" in md and "nan" not in md
+
+
 # ---- Regression: direction-aware snapshot selection (NBA_CONTEXT section 12) --------------------------------
 def _q(book, side, dec, line=5.5, player="X Player"):
     t = datetime(2026, 11, 3, 17, 0, tzinfo=timezone.utc)
